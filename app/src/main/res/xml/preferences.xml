@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="View texts"
+        android:key="pref_key_view_texts">
+        <EditTextPreference
+            android:key="pref_key_hello_world"
+            android:summary="Some summary"
+            android:title="Hello World text" />
+    </PreferenceCategory>
+</PreferenceScreen>
