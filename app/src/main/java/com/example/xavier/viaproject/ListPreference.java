@@ -21,6 +21,9 @@ public class ListPreference extends android.preference.ListPreference {
 
     @Override
     public String getSummary() {
-        return this.getEntry().toString();
+        if(this.getEntry() != null)
+            return this.getEntry().toString();
+        else
+            return "New entry";
     }
 }

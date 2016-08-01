@@ -50,4 +50,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
+
+    public void play(View view) {
+        Intent intent = new Intent(this, PlayActivity.class);
+        startActivity(intent);
+    }
 }
