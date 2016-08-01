@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="View texts"
-        android:key="pref_key_view_texts">
+        android:title="User profile"
+        android:key="pref_key_profile">
+        <com.example.xavier.viaproject.EditTextPreference
+            android:key="pref_key_name"
+            android:title="Set username" />
+        <CheckBoxPreference
+            android:key="checkBoxPref"
+            android:title="Titre"
+            android:summaryOn="Résumé quand sélectionné"
+            android:summaryOff="Résumé quand pas sélectionné"
+            android:defaultValue="true"/>
         <EditTextPreference
-            android:key="pref_key_hello_world"
-            android:summary="Some summary"
-            android:title="Hello World text" />
+            android:key="editTextPref"
+            android:dialogTitle="Titre de la boîte"
+            android:positiveButtonText="Je valide !"
+            android:negativeButtonText="Je valide pas !"
+            android:title="Titre"
+            android:dependency="checkBoxPref" />
+        <ListPreference
+            android:key="listPref"
+            android:dialogTitle="Choisissez une couleur"
+            android:entries="@array/color_list"
+            android:entryValues="@array/color_values"
+            android:title="Choisir couleur" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Game settings"
+        android:key="pref_key_game">
+
+        <com.example.xavier.viaproject.ListPreference
+            android:key="pref_key_difficulty"
+            android:dialogTitle="Difficulty level"
+            android:entries="@array/difficulty_list"
+            android:entryValues="@array/difficulty_values"
+            android:title="Set your difficulty level" />
     </PreferenceCategory>
 </PreferenceScreen>

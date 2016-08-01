@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="color_list">
+        <item>Bleu</item>
+        <item>Rouge</item>
+        <item>Vert</item>
+    </array>
+    <array name="color_values">
+        <item>blue</item>
+        <item>red</item>
+        <item>green</item>
+    </array>
+    <array name="difficulty_list">
+        <item>Easy</item>
+        <item>Intermediate</item>
+        <item>Hard</item>
+    </array>
+    <array name="difficulty_values">
+        <item>easy</item>
+        <item>intermediate</item>
+        <item>hard</item>
+    </array>
+</resources>

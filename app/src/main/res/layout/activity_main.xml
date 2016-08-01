@@ -21,6 +21,13 @@
             android:textStyle="bold"
             android:typeface="serif" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/textName"
+            android:layout_gravity="center_horizontal" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,6 +42,7 @@
             android:layout_height="wrap_content"
             android:text="Quit"
             android:id="@+id/exitButton"/>
+
     </LinearLayout>
 
 </RelativeLayout>
