@@ -3,6 +3,7 @@ package com.example.xavier.viaproject;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 
 /**
@@ -16,16 +17,12 @@ public class PlayActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
+
         Intent intent = getIntent();
-        String music_to_play = intent.getStringExtra("music_to_play");
-        switch (music_to_play) {
-            case "rhcp":
-                mMediaPlayer = MediaPlayer.create(this, R.raw.rhcp);
-                break;
-            case "passenger_let_her_go":
-                mMediaPlayer = MediaPlayer.create(this, R.raw.passenger_let_her_go);
-                break;
-        }
+        String music_name = intent.getStringExtra("music_to_play");
+        Uri music_uri = Uri.parse("android.resource://com.example.xavier.viaproject/raw/" + music_name);
+        mMediaPlayer = MediaPlayer.create(this, music_uri);
+
         // Start playing the file
         mMediaPlayer.start();
     }
