@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private static final String PREF_NAME_KEY = "pref_key_name";
+    private static final String PREF_MUSIC_KEY = "pref_key_music";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
     protected  void onResume(){
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String result = sharedPreferences.getString(PREF_NAME_KEY, "New player");
+        String username = sharedPreferences.getString(PREF_NAME_KEY, "New player");
         TextView textView = (TextView) findViewById(R.id.textName);
-        textView.setText(result);
+        textView.setText(username);
     }
 
     @Override
@@ -52,7 +53,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void play(View view) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String music = sharedPreferences.getString(PREF_MUSIC_KEY, "passenger_let_her_go");
         Intent intent = new Intent(this, PlayActivity.class);
+        intent.putExtra("music_to_play", music);
         startActivity(intent);
     }
 }

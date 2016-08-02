@@ -20,4 +20,12 @@
         <item>intermediate</item>
         <item>hard</item>
     </array>
+    <array name="music_list">
+        <item>RHCP - Dark Necessities</item>
+        <item>Passenger - Let her go</item>
+    </array>
+    <array name="music_values">
+        <item>rhcp</item>
+        <item>passenger_let_her_go</item>
+    </array>
 </resources>
