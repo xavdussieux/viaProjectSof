@@ -11,6 +11,8 @@ import android.os.Bundle;
  */
 public class PlayActivity extends Activity{
 
+    private static final String URI_PATH = "android.resource://com.example.xavier.viaproject/raw/";
+
     MediaPlayer mMediaPlayer;
 
     @Override
@@ -20,7 +22,7 @@ public class PlayActivity extends Activity{
 
         Intent intent = getIntent();
         String music_name = intent.getStringExtra("music_to_play");
-        Uri music_uri = Uri.parse("android.resource://com.example.xavier.viaproject/raw/" + music_name);
+        Uri music_uri = Uri.parse(URI_PATH + music_name);
         mMediaPlayer = MediaPlayer.create(this, music_uri);
 
         // Start playing the file
