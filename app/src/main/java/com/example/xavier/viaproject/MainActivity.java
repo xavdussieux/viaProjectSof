@@ -10,6 +10,8 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String username = sharedPreferences.getString(PREF_NAME_KEY, "New player");
         TextView textView = (TextView) findViewById(R.id.textName);
-        textView.setText(username);
+        textView.setText("Player : " + username);
     }
 
     @Override
@@ -58,5 +60,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PlayActivity.class);
         intent.putExtra("music_to_play", music);
         startActivity(intent);
+    }
+
+    public void resume(View view) {
+
     }
 }
