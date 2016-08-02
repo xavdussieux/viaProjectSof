@@ -27,5 +27,7 @@ public class PlayActivity extends Activity{
 
         // Start playing the file
         mMediaPlayer.start();
+
+
     }
 }
