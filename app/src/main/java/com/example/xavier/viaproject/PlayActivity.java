@@ -2,9 +2,12 @@ package com.example.xavier.viaproject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,16 +19,17 @@ import android.widget.ImageView;
  * Created by Xavier on 01/08/2016.
  */
 public class PlayActivity extends Activity{
-    private Animation translateAnimation;
 
     private static final String URI_PATH = "android.resource://com.example.xavier.viaproject/raw/";
 
     private MediaPlayer mMediaPlayer;
     private int mSongPer;
 
+    GameView gameView;
+
     /* trying to refactor the code
     public void scrollNote(int note_id){
-        //choosing right note view
+        //choosing right bluenote view
         ImageView note_img;
         switch(note_id){
             case 1:
@@ -61,7 +65,13 @@ public class PlayActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         //basic initialization
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        gameView = new GameView(this, size.x, size.y);
+        setContentView(gameView);
 
         //setup music
         Intent intent = getIntent();
@@ -71,18 +81,6 @@ public class PlayActivity extends Activity{
         //Start playing the file
         mSongPer = mMediaPlayer.getCurrentPosition();
         mMediaPlayer.start();
-
-        //setup scrolling notes
-        translateAnimation = new TranslateAnimation(
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 3f);
-        translateAnimation.setDuration(8000);
-        translateAnimation.setInterpolator(new LinearInterpolator());
-        ImageView note_img;
-        note_img = (ImageView) findViewById(R.id.note_target1);
-        note_img.startAnimation(translateAnimation);
 
     }
 
@@ -104,6 +102,4 @@ public class PlayActivity extends Activity{
         super.onStop();
         mMediaPlayer.stop();
     }
-
-
 }
