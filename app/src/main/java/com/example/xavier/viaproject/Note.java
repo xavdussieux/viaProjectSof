@@ -78,6 +78,7 @@ public class Note {
         for (Point i : mNotes) {
             Paint paint = new Paint();
             paint.setColor(Color.argb(255, 249, 129, 0));
+            //switch needs constants
             if (i.x == GREEN_X)
                 canvas.drawBitmap(mGreen, i.x, i.y, paint);
             if (i.x == RED_X)

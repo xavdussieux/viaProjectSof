@@ -44,7 +44,6 @@ public class GameView extends SurfaceView {
                         gameLoopThread.join();
                         retry = false;
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
             }
@@ -75,7 +74,9 @@ public class GameView extends SurfaceView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.BLACK);
-        note.update(canvas);
+        if(canvas != null) {
+            canvas.drawColor(Color.BLACK);
+            note.update(canvas);
+        }
     }
 }
