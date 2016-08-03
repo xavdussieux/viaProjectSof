@@ -6,16 +6,17 @@ import android.graphics.Canvas;
  * Created by Xavier on 03/08/2016.
  */
 public class GameLoopThread extends Thread {
-    private GameView view;
-    private boolean running = false;
+
+    private GameView mGameView;
+    private boolean mIsRunning = false;
     static final long FPS = 50;
 
     public GameLoopThread(GameView view) {
-        this.view = view;
+        this.mGameView = view;
     }
 
     public void setRunning(boolean run) {
-        running = run;
+        mIsRunning = run;
     }
 
     @Override
@@ -24,23 +25,23 @@ public class GameLoopThread extends Thread {
         long startTime;
         long sleepTime;
         int i = 0;
-        while (running) {
+        while (mIsRunning) {
             if(i % 20 == 0)
-                view.addNote();
+                mGameView.addNote();
             Canvas c = null;
             startTime = System.currentTimeMillis();
             try {
-                c = view.getHolder().lockCanvas();
-                synchronized (view.getHolder()) {
-                    view.onDraw(c);
+                c = mGameView.getHolder().lockCanvas();
+                synchronized (mGameView.getHolder()) {
+                    mGameView.onDraw(c);
                 }
             } finally {
                 if (c != null) {
-                    view.getHolder().unlockCanvasAndPost(c);
+                    mGameView.getHolder().unlockCanvasAndPost(c);
                 }
             }
-            i ++;
-            sleepTime = MSPT-(System.currentTimeMillis() - startTime);
+            i++;
+            sleepTime = MSPT - (System.currentTimeMillis() - startTime);
             try {
                 if (sleepTime > 0)
                     sleep(sleepTime);

@@ -7,6 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +17,7 @@ import java.util.List;
 /**
  * Created by Xavier on 02/08/2016.
  */
-public class Note {
+public class Note extends View implements View.OnTouchListener {
 
     private static final int NOTE_SPEED = 10;
 
@@ -25,22 +28,24 @@ public class Note {
     private int mNoteSize;
     private int mScreenx;
     private int mScreeny;
-    private int BLUE_X;
-    private int RED_X;
-    private int GREEN_X;
-    private int YELLOW_X;
+    private int mBlueX;
+    private int mRedX;
+    private int mGreenX;
+    private int mYellowX;
     private List<Point> mNotes;
 
-    public Note (Context context, int screenX, int screenY) {
+    public Note (final Context context, int screenX, int screenY) {
+        //initializing view
+        super(context);
 
+        //resizing notes according to the player's screen
         mScreenx = screenX;
         mScreeny = screenY;
-        mNoteSize = screenX/3;
-
-        GREEN_X = screenX * 1/5 - 200;
-        RED_X = screenX * 2/5 - 200;
-        YELLOW_X = screenX * 3/5 - 200;
-        BLUE_X = screenX * 4/5 - 200;
+        mNoteSize = screenX/5;
+        mGreenX = screenX * 1/5;
+        mRedX = screenX * 2/5;
+        mYellowX = screenX * 3/5;
+        mBlueX = screenX * 4/5;
 
 
         mBlue = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluenote);
@@ -51,7 +56,18 @@ public class Note {
         mGreen = Bitmap.createScaledBitmap(mGreen,mNoteSize, mNoteSize, false);
         mRed = Bitmap.createScaledBitmap(mRed,mNoteSize, mNoteSize, false);
         mYellow = Bitmap.createScaledBitmap(mYellow,mNoteSize, mNoteSize, false);
+
         mNotes = new ArrayList<Point>();
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        //method seems to be never called
+        if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+            mBlue = mYellow;
+            Toast.makeText(this.getContext(), "Touch listened", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     public void spawn(String noteType) {
@@ -59,16 +75,16 @@ public class Note {
         paint.setColor(Color.argb(255, 249, 129, 0));
         switch (noteType) {
             case "green":
-                mNotes.add(new Point(GREEN_X, -200));
+                mNotes.add(new Point(mGreenX, -200));
                 break;
             case "red":
-                mNotes.add(new Point(RED_X, -200));
+                mNotes.add(new Point(mRedX, -200));
                 break;
             case "yellow":
-                mNotes.add(new Point(YELLOW_X, -200));
+                mNotes.add(new Point(mYellowX, -200));
                 break;
             case "blue":
-                mNotes.add(new Point(BLUE_X, -200));
+                mNotes.add(new Point(mBlueX, -200));
                 break;
         }
     }
@@ -79,13 +95,13 @@ public class Note {
             Paint paint = new Paint();
             paint.setColor(Color.argb(255, 249, 129, 0));
             //switch needs constants
-            if (i.x == GREEN_X)
+            if (i.x == mGreenX)
                 canvas.drawBitmap(mGreen, i.x, i.y, paint);
-            if (i.x == RED_X)
+            if (i.x == mRedX)
                 canvas.drawBitmap(mRed, i.x, i.y, paint);
-            if (i.x == YELLOW_X)
+            if (i.x == mYellowX)
                 canvas.drawBitmap(mYellow, i.x, i.y, paint);
-            if (i.x == BLUE_X)
+            if (i.x == mBlueX)
                 canvas.drawBitmap(mBlue, i.x, i.y, paint);
             i.y += NOTE_SPEED;
             if (i.y > mScreeny){
@@ -96,4 +112,5 @@ public class Note {
             mNotes.remove(del);
         }
     }
+
 }

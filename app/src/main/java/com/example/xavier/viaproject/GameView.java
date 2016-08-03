@@ -1,21 +1,11 @@
 package com.example.xavier.viaproject;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.media.SoundPool;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
-import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -23,25 +13,25 @@ import java.util.Random;
  */
 
 public class GameView extends SurfaceView {
-    private Bitmap bmp;
-    private SurfaceHolder holder;
-    private GameLoopThread gameLoopThread;
-    private Note note;
+
+    private SurfaceHolder mSurfaceHolder;
+    private GameLoopThread mGameLoopThread;
+    private Note mNote;
     private String mNoteType[] = {"green", "red", "yellow", "blue"};
 
     public GameView(Context context, int screenx, int screeny) {
         super(context);
-        gameLoopThread = new GameLoopThread(this);
-        holder = getHolder();
-        holder.addCallback(new SurfaceHolder.Callback() {
+        mGameLoopThread = new GameLoopThread(this);
+        mSurfaceHolder = getHolder();
+        mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 boolean retry = true;
-                gameLoopThread.setRunning(false);
+                mGameLoopThread.setRunning(false);
                 while (retry) {
                     try {
-                        gameLoopThread.join();
+                        mGameLoopThread.join();
                         retry = false;
                     } catch (InterruptedException e) {
                     }
@@ -50,8 +40,8 @@ public class GameView extends SurfaceView {
 
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                gameLoopThread.setRunning(true);
-                gameLoopThread.start();
+                mGameLoopThread.setRunning(true);
+                mGameLoopThread.start();
             }
 
             @Override
@@ -60,7 +50,7 @@ public class GameView extends SurfaceView {
                 // Nothing to be done
             }
         });
-        note = new Note(context, screenx, screeny);
+        mNote = new Note(context, screenx, screeny);
     }
 
     public static String getRandom(String[] array) {
@@ -69,14 +59,14 @@ public class GameView extends SurfaceView {
     }
 
     public void addNote() {
-        note.spawn(getRandom(mNoteType));
+        mNote.spawn(getRandom(mNoteType));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if(canvas != null) {
             canvas.drawColor(Color.BLACK);
-            note.update(canvas);
+            mNote.update(canvas);
         }
     }
 }
