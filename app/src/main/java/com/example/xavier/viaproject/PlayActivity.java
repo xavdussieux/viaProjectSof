@@ -27,39 +27,6 @@ public class PlayActivity extends Activity{
 
     GameView gameView;
 
-    /* trying to refactor the code
-    public void scrollNote(int note_id){
-        //choosing right bluenote view
-        ImageView note_img;
-        switch(note_id){
-            case 1:
-                note_img = (ImageView) findViewById(R.id.note_target1);
-                break;
-            case 2:
-                note_img = (ImageView) findViewById(R.id.note_target2);
-                break;
-            case 3:
-                note_img = (ImageView) findViewById(R.id.note_target3);
-                break;
-            case 4:
-                note_img = (ImageView) findViewById(R.id.note_target4);
-                break;
-            default:
-                //solve bad_id
-                note_img = (ImageView) findViewById(R.id.note_target1);
-                break;
-        }
-        //launching animation
-        translateAnimation = new TranslateAnimation(
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 1f);
-        translateAnimation.setDuration(8000);
-        translateAnimation.setInterpolator(new LinearInterpolator());
-        note_img.startAnimation(translateAnimation);
-    }
-       */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
