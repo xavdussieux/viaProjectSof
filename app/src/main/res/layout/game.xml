@@ -16,8 +16,45 @@
             android:id="@+id/note_target1"
             android:src="@drawable/note">
         </ImageView>
+    </ScrollView>
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:id="@+id/note_target2"
+            android:src="@drawable/note_target">
+        </ImageView>
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:id="@+id/note_target3"
+            android:src="@drawable/note_target">
+        </ImageView>
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:id="@+id/note_target4"
+            android:src="@drawable/note_target">
+        </ImageView>
     </ScrollView>
 -->
 
