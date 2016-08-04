@@ -42,37 +42,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        database.setLogLevel(Logger.Level.DEBUG);
-        final DatabaseReference appLaunchCount = database.getReference("appLaunchCount");
-
-        appLaunchCount.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Fetch the value from the snapshot of the data, as an Integer
-                Integer value = dataSnapshot.getValue(Integer.class);
-
-                // If the value is null, then the data wasn't defined in the database, so default to 1.
-                int newValue;
-                if (value == null) {
-                    newValue = 1;
-                } else {
-                    newValue = value + 1;
-                }
-
-                // Upload the new value to the database
-                appLaunchCount.setValue(newValue);
-                // Toast the amount of times the app has been opened
-                Toast.makeText(MainActivity.this, "App launched: " + newValue + " times", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle errors here
-            }
-        });
-
-
+        DatabaseAccess databaseAccess = new DatabaseAccess(this);
     }
 
     @Override
