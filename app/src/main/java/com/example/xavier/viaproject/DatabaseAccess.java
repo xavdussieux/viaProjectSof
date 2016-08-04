@@ -15,10 +15,18 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class DatabaseAccess {
 
+    private FirebaseDatabase mDatabase;
+    private Context mContext;
+
     public DatabaseAccess (final Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.setLogLevel(Logger.Level.DEBUG);
-        final DatabaseReference appLaunchCount = database.getReference("appLaunchCount");
+        mDatabase = database;
+        mContext = context;
+    }
+
+    public void launchCount() {
+        final DatabaseReference appLaunchCount = mDatabase.getReference("appLaunchCount");
 
         appLaunchCount.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -36,8 +44,26 @@ public class DatabaseAccess {
 
                 // Upload the new value to the database
                 appLaunchCount.setValue(newValue);
-                // Toast the amount of times the app has been opened
-                Toast.makeText(context, "App launched: " + newValue + " times", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle errors here
+            }
+        });
+    }
+
+    public void storeRecord (String player, final Integer record){
+        final DatabaseReference appLaunchCount = mDatabase.getReference(player + "_record");
+
+        appLaunchCount.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer prevRecord = dataSnapshot.getValue(Integer.class);
+                if(prevRecord == null || prevRecord < record) {
+                    Toast.makeText(mContext, "New best record !", Toast.LENGTH_SHORT).show();
+                    appLaunchCount.setValue(record);
+                }
             }
 
             @Override

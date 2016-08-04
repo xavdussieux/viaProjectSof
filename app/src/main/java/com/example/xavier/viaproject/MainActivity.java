@@ -27,11 +27,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String PREF_NAME_KEY = "pref_key_name";
     private static final String PREF_MUSIC_KEY = "pref_key_music";
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Button exitButton = (Button) findViewById(R.id.exitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {
@@ -43,13 +46,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         DatabaseAccess databaseAccess = new DatabaseAccess(this);
+        databaseAccess.launchCount();
     }
 
     @Override
     protected  void onResume(){
         super.onResume();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = sharedPreferences.getString(PREF_NAME_KEY, "New player");
+        String username = mSharedPreferences.getString(PREF_NAME_KEY, "New player");
         TextView textView = (TextView) findViewById(R.id.textName);
         textView.setText("Player : " + username);
     }
