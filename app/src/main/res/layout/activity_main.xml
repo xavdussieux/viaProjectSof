@@ -49,8 +49,6 @@
             android:layout_height="wrap_content"
             android:text="Quit"
             android:id="@+id/exitButton"/>
-
-
     </LinearLayout>
 
 </RelativeLayout>
