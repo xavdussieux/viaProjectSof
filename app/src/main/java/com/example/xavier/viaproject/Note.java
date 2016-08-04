@@ -42,10 +42,10 @@ public class Note extends View implements View.OnTouchListener {
         mScreenx = screenX;
         mScreeny = screenY;
         mNoteSize = screenX/5;
-        mGreenX = screenX * 1/5;
-        mRedX = screenX * 2/5;
-        mYellowX = screenX * 3/5;
-        mBlueX = screenX * 4/5;
+        mGreenX = screenX * 1/10;
+        mRedX = screenX * 3/10;
+        mYellowX = screenX * 5/10;
+        mBlueX = screenX * 7/10;
 
 
         mBlue = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluenote);
