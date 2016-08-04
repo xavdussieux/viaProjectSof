@@ -24,11 +24,12 @@ public class GameLoopThread extends Thread {
         long MSPT = 1000 / FPS; // milliseconds per tick
         long startTime;
         long sleepTime;
+        Canvas c;
         int i = 0;
         while (mIsRunning) {
             if(i % 20 == 0)
                 mGameView.addNote();
-            Canvas c = null;
+            c = null;
             startTime = System.currentTimeMillis();
             try {
                 c = mGameView.getHolder().lockCanvas();

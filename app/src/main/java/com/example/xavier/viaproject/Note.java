@@ -32,6 +32,7 @@ public class Note  {
     private int mGreenX;
     private int mYellowX;
     private List<Point> mNotes;
+    private List<Point> mNotesToRemove;
 
     public Note (final Context context, int screenX, int screenY) {
 
@@ -54,6 +55,7 @@ public class Note  {
         mYellow = Bitmap.createScaledBitmap(mYellow,mNoteSize, mNoteSize, false);
 
         mNotes = new ArrayList<Point>();
+        mNotesToRemove = new ArrayList<Point>();
     }
 
     public void spawn(String noteType) {
@@ -83,6 +85,10 @@ public class Note  {
         return mNotes;
     }
 
+    public void addNoteToRemove(Point note){
+        mNotesToRemove.add(note);
+    }
+
     public void update(Canvas canvas) {
         Point del = null;
         for (Point point : mNotes) {
@@ -105,12 +111,20 @@ public class Note  {
             }
         }
         if(del != null){
-            removeNote(del);
+            addNoteToRemove(del);
         }
+        removeNotes();
     }
 
-    public void removeNote(Point noteObj){
-        mNotes.remove(noteObj);
+    public void removeNotes(){
+        if(mNotesToRemove != null && !mNotesToRemove.isEmpty()) {
+            //remove notes
+            for (Point p : mNotesToRemove) {
+                mNotes.remove(p);
+            }
+            //reinitialize array
+            mNotesToRemove.removeAll(mNotesToRemove);
+        }
     }
 
 }

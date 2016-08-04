@@ -79,20 +79,15 @@ public class GameView extends SurfaceView {
         List<Point> noteList = mNote.getNotes();
         int dx, dy, noteSize;
         Point del = null;
-        boolean shouldRemove = false;
         for(Point p : noteList) {
             dx = touchedPoint.x - p.x;
             dy = touchedPoint.y - p.y;
             noteSize = mNote.getNoteSize();
             if(dx > 0 && dx <  noteSize)
                 if (dy > 0 && dy < noteSize){
-                    synchronized (del = p) {}
-                    break;
+                    mNote.addNoteToRemove(p);
+                    return true;
                 }
-        }
-        if(del != null){
-            mNote.removeNote(del);
-            return true;
         }
         return false;
     }
