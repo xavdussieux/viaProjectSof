@@ -20,8 +20,6 @@ import android.widget.ImageView;
  */
 public class PlayActivity extends Activity{
 
-    private static final String URI_PATH = "android.resource://com.example.xavier.viaproject/raw/";
-
     private MediaPlayer mMediaPlayer;
     private int mSongPer;
 
@@ -43,7 +41,7 @@ public class PlayActivity extends Activity{
         //setup music
         Intent intent = getIntent();
         String music_name = intent.getStringExtra("music_to_play");
-        Uri music_uri = Uri.parse(URI_PATH + music_name);
+        Uri music_uri = Uri.parse(Constants.URI_PATH + music_name);
         mMediaPlayer = MediaPlayer.create(this, music_uri);
         //Start playing the file
         mSongPer = mMediaPlayer.getCurrentPosition();

@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,8 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String PREF_NAME_KEY = "pref_key_name";
-    private static final String PREF_MUSIC_KEY = "pref_key_music";
     private SharedPreferences mSharedPreferences;
 
     @Override
@@ -45,14 +46,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseAccess databaseAccess = new DatabaseAccess(this);
+        DatabaseAccess databaseAccess = new DatabaseAccess(this, mSharedPreferences);
         databaseAccess.launchCount();
     }
 
     @Override
     protected  void onResume(){
         super.onResume();
-        String username = mSharedPreferences.getString(PREF_NAME_KEY, "New player");
+        String username = mSharedPreferences.getString(Constants.PREF_NAME_KEY, "New player");
         TextView textView = (TextView) findViewById(R.id.textName);
         textView.setText("Player : " + username);
     }
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void play(View view) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String music = sharedPreferences.getString(PREF_MUSIC_KEY, "rhcp");
+        String music = sharedPreferences.getString(Constants.PREF_MUSIC_KEY, "rhcp");
         Intent intent = new Intent(this, PlayActivity.class);
         intent.putExtra("music_to_play", music);
         startActivity(intent);

@@ -9,7 +9,6 @@ public class GameLoopThread extends Thread {
 
     private GameView mGameView;
     private boolean mIsRunning = false;
-    static final long FPS = 50;
 
     public GameLoopThread(GameView view) {
         this.mGameView = view;
@@ -21,7 +20,7 @@ public class GameLoopThread extends Thread {
 
     @Override
     public void run() {
-        long MSPT = 1000 / FPS; // milliseconds per tick
+        long MSPT = 1000 / Constants.FPS; // milliseconds per tick
         long startTime;
         long sleepTime;
         Canvas c;

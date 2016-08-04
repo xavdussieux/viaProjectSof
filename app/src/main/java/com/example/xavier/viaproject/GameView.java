@@ -19,6 +19,7 @@ import java.util.Random;
 
 public class GameView extends SurfaceView {
 
+    // TODO add constants in constant class
     private static final int TOUCH_POINTS = 10;
     private static final int MISS_POINTS = 5;
     private SurfaceHolder mSurfaceHolder;
@@ -80,6 +81,8 @@ public class GameView extends SurfaceView {
     }
 
     protected boolean onNote(Point touchedPoint) {
+        // TODO rename method -> onNoteWithDel
+        // TODO point counting should not be here
         List<Point> noteList = mNote.getNotes();
         int dx, dy, noteSize;
         Point del = null;

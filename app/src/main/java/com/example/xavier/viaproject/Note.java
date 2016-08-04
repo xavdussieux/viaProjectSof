@@ -19,8 +19,6 @@ import java.util.List;
  */
 public class Note  {
 
-    private static final int NOTE_SPEED = 10;
-
     private Bitmap mBlue;
     private Bitmap mGreen;
     private Bitmap mYellow;
@@ -104,7 +102,7 @@ public class Note  {
                     canvas.drawBitmap(mYellow, point.x, point.y, paint);
                 if (point.x == mBlueX)
                     canvas.drawBitmap(mBlue, point.x, point.y, paint);
-                point.y += NOTE_SPEED;
+                point.y += Constants.NOTE_SPEED;
                 if (point.y > mScreeny) {
                     del = point;
                 }

@@ -1,6 +1,7 @@
 package com.example.xavier.viaproject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -17,8 +18,9 @@ public class DatabaseAccess {
 
     private FirebaseDatabase mDatabase;
     private Context mContext;
+    private SharedPreferences mSharedPreferences;
 
-    public DatabaseAccess (final Context context) {
+    public DatabaseAccess (Context context, SharedPreferences sharedPreferences) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.setLogLevel(Logger.Level.DEBUG);
         mDatabase = database;
@@ -53,8 +55,9 @@ public class DatabaseAccess {
         });
     }
 
-    public void storeRecord (String player, final Integer record){
-        final DatabaseReference appLaunchCount = mDatabase.getReference(player + "_record");
+    public void storeRecord (final Integer record){
+        String playerName = mSharedPreferences.getString(Constants.PREF_NAME_KEY, "New player");
+        final DatabaseReference appLaunchCount = mDatabase.getReference(playerName + "_record");
 
         appLaunchCount.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
