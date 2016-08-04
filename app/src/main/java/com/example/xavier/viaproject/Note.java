@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by Xavier on 02/08/2016.
  */
-public class Note extends View implements View.OnTouchListener {
+public class Note  {
 
     private static final int NOTE_SPEED = 10;
 
@@ -26,7 +26,6 @@ public class Note extends View implements View.OnTouchListener {
     private Bitmap mYellow;
     private Bitmap mRed;
     private int mNoteSize;
-    private int mScreenx;
     private int mScreeny;
     private int mBlueX;
     private int mRedX;
@@ -35,14 +34,11 @@ public class Note extends View implements View.OnTouchListener {
     private List<Point> mNotes;
 
     public Note (final Context context, int screenX, int screenY) {
-        //initializing view
-        super(context);
 
         //resizing notes according to the player's screen
-        mScreenx = screenX;
         mScreeny = screenY;
-        mNoteSize = screenX/5;
-        mGreenX = screenX * 1/10;
+        mNoteSize = screenX / 5;
+        mGreenX = screenX / 10;
         mRedX = screenX * 3/10;
         mYellowX = screenX * 5/10;
         mBlueX = screenX * 7/10;
@@ -58,16 +54,6 @@ public class Note extends View implements View.OnTouchListener {
         mYellow = Bitmap.createScaledBitmap(mYellow,mNoteSize, mNoteSize, false);
 
         mNotes = new ArrayList<Point>();
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        //method seems to be never called
-        if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-            mBlue = mYellow;
-            Toast.makeText(this.getContext(), "Touch listened", Toast.LENGTH_SHORT).show();
-        }
-        return true;
     }
 
     public void spawn(String noteType) {
@@ -89,28 +75,42 @@ public class Note extends View implements View.OnTouchListener {
         }
     }
 
+    public int getNoteSize() {
+        return mNoteSize;
+    }
+
+    public List<Point> getNotes() {
+        return mNotes;
+    }
+
     public void update(Canvas canvas) {
         Point del = null;
-        for (Point i : mNotes) {
-            Paint paint = new Paint();
-            paint.setColor(Color.argb(255, 249, 129, 0));
-            //switch needs constants
-            if (i.x == mGreenX)
-                canvas.drawBitmap(mGreen, i.x, i.y, paint);
-            if (i.x == mRedX)
-                canvas.drawBitmap(mRed, i.x, i.y, paint);
-            if (i.x == mYellowX)
-                canvas.drawBitmap(mYellow, i.x, i.y, paint);
-            if (i.x == mBlueX)
-                canvas.drawBitmap(mBlue, i.x, i.y, paint);
-            i.y += NOTE_SPEED;
-            if (i.y > mScreeny){
-                del = i;
+        for (Point point : mNotes) {
+            if(point != null) {
+                Paint paint = new Paint();
+                paint.setColor(Color.argb(255, 249, 129, 0));
+                //switch needs constants
+                if (point.x == mGreenX)
+                    canvas.drawBitmap(mGreen, point.x, point.y, paint);
+                if (point.x == mRedX)
+                    canvas.drawBitmap(mRed, point.x, point.y, paint);
+                if (point.x == mYellowX)
+                    canvas.drawBitmap(mYellow, point.x, point.y, paint);
+                if (point.x == mBlueX)
+                    canvas.drawBitmap(mBlue, point.x, point.y, paint);
+                point.y += NOTE_SPEED;
+                if (point.y > mScreeny) {
+                    del = point;
+                }
             }
         }
         if(del != null){
-            mNotes.remove(del);
+            removeNote(del);
         }
+    }
+
+    public void removeNote(Point noteObj){
+        mNotes.remove(noteObj);
     }
 
 }
