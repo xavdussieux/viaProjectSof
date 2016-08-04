@@ -19,13 +19,17 @@ import java.util.Random;
 
 public class GameView extends SurfaceView {
 
+    private static final int TOUCH_POINTS = 10;
+    private static final int MISS_POINTS = 5;
     private SurfaceHolder mSurfaceHolder;
     private GameLoopThread mGameLoopThread;
     private Note mNote;
+    private int mScore;
     private String mNoteType[] = {"green", "red", "yellow", "blue"};
 
     public GameView(Context context, int screenx, int screeny) {
         super(context);
+        mScore = 0;
         mGameLoopThread = new GameLoopThread(this);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
@@ -86,9 +90,11 @@ public class GameView extends SurfaceView {
             if(dx > 0 && dx <  noteSize)
                 if (dy > 0 && dy < noteSize){
                     mNote.addNoteToRemove(p);
+                    mScore += TOUCH_POINTS;
                     return true;
                 }
         }
+        mScore -= MISS_POINTS;
         return false;
     }
 
@@ -98,9 +104,9 @@ public class GameView extends SurfaceView {
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             Point point = new Point((int) event.getX(), (int) event.getY());
             if (onNote(point))
-                Toast.makeText(this.getContext(), "Touché", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getContext(), "Touched : " + mScore + "pts", Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(this.getContext(), "Pas touché", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getContext(), "Missed : " + mScore + "pts", Toast.LENGTH_SHORT).show();
         }
         return super.onTouchEvent(event);
     }
