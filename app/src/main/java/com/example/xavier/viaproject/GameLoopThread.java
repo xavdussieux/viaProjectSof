@@ -12,6 +12,8 @@ public class GameLoopThread extends Thread {
     private boolean mIsRunning = false;
     private MediaPlayer mMediaPlayer;
     private int mSongPer;
+    private long mInitTime;
+    private long mCurrTime;
 
     public GameLoopThread(GameView view) {
         this.mGameView = view;
@@ -26,7 +28,7 @@ public class GameLoopThread extends Thread {
     }
 
     public int getTime () {
-        return mSongPer;
+        return (int) (mCurrTime - mInitTime);
     }
 
     @Override
@@ -39,13 +41,13 @@ public class GameLoopThread extends Thread {
 
         //Start playing the file
         mMediaPlayer.start();
+        mInitTime = System.currentTimeMillis();
 
         while (mIsRunning) {
-            mSongPer = mMediaPlayer.getCurrentPosition();
             if(i % 20 == 0)
                 mGameView.addNote();
             c = null;
-            startTime = System.currentTimeMillis();
+            mCurrTime = System.currentTimeMillis();
             try {
                 c = mGameView.getHolder().lockCanvas();
                 synchronized (mGameView.getHolder()) {
@@ -57,7 +59,7 @@ public class GameLoopThread extends Thread {
                 }
             }
             i++;
-            sleepTime = mspt - (System.currentTimeMillis() - startTime);
+            sleepTime = mspt - (System.currentTimeMillis() - mCurrTime);
             try {
                 if (sleepTime > 0)
                     sleep(sleepTime);

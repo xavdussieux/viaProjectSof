@@ -109,7 +109,6 @@ public class Note  {
             if (note.pos.x == mBlueX) canvas.drawBitmap(mBlue, note.pos.x, note.pos.y, paint);
             int dt = mGameLoopThread.getTime() - note.spawnTime;
             note.pos.y = (int) (dt * mSpeed + Constants.NOTE_START_Y);
-            Log.e("posy", Integer.toString(note.pos.y));
             if (note.pos.y > mScreeny) {
                 del = note;
             }
