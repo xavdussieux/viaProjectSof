@@ -29,7 +29,7 @@ public class Note  {
     private List<Point> mNotes;
     private List<Point> mNotesToRemove;
 
-    public Note (final Context context, int screenX, int screenY) {
+    public Note (Context context, int screenX, int screenY) {
 
         //resizing notes according to the player's screen
         mScreeny = screenY;
@@ -85,6 +85,10 @@ public class Note  {
     }
 
     public void update(Canvas canvas) {
+        /* TODO make notes scroll not with FPS but with time
+         so we can assume that once a note is created
+         it will be at the bottom of the screen like
+         X ms later where X is constant */
         Point del = null;
         for (Point point : mNotes) {
             if(point != null) {

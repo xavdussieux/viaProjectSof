@@ -28,8 +28,10 @@ public class PlayActivity extends Activity{
         Point size = new Point();
         display.getSize(size);
 
+
         gameView = new GameView(this, size.x, size.y);
         setContentView(gameView);
+
 
         //setup music
         Intent intent = getIntent();
