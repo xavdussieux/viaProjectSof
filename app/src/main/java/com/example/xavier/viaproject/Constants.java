@@ -13,4 +13,7 @@ public class Constants {
     public static final int NOTE_SPEED = 10;
 
     public static final String URI_PATH = "android.resource://com.example.xavier.viaproject/raw/";
+
+    public static final int TOUCH_POINTS = 10;
+    public static final int MISS_POINTS = 5;
 }
