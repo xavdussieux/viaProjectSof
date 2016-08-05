@@ -91,9 +91,7 @@ public class GameView extends SurfaceView {
         }
     }
 
-    protected boolean onNote(Point touchedPoint) {
-        // TODO rename method -> onNoteWithDel
-        // TODO point counting should not be here
+    protected boolean onNoteWithDel(Point touchedPoint) {
         List<Point> noteList = mNote.getNotes();
         int dx, dy, noteSize;
         Point del = null;
@@ -115,8 +113,8 @@ public class GameView extends SurfaceView {
 
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             Point point = new Point((int) event.getX(), (int) event.getY());
-            onNote(point);
-            if (onNote(point))
+            onNoteWithDel(point);
+            if (onNoteWithDel(point))
                 mScore.touched();
             else
                 mScore.missed();
