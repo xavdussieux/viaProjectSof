@@ -5,8 +5,15 @@ package com.example.xavier.viaproject;
  */
 public class Constants {
 
-    public static final String PREF_NAME_KEY = "pref_key_name";
+    //scoring constants
+    public static final int TOUCH_POINTS = 10;
+    public static final int MISS_POINTS = 5;
+    public static final int MULTIPLIER_STEP_X2 = 10;
+    public static final int MULTIPLIER_STEP_X4 = 20;
+    public static final int MULTIPLIER_STEP_X8 = 50;
+
     public static final String PREF_MUSIC_KEY = "pref_key_music";
+    public static final String PREF_NAME_KEY = "pref_key_music";
 
     public static final long FPS = 50;
 
@@ -14,6 +21,4 @@ public class Constants {
 
     public static final String URI_PATH = "android.resource://com.example.xavier.viaproject/raw/";
 
-    public static final int TOUCH_POINTS = 10;
-    public static final int MISS_POINTS = 5;
 }

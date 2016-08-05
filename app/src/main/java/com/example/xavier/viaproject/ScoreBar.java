@@ -12,18 +12,23 @@ public class ScoreBar {
 
     private Score mScore;
     private int mScreenx;
+    private int mScreeny;
 
     public ScoreBar(Context context, int screenx, int screeny, Score score) {
         mScore = score;
         mScreenx = screenx;
+        mScreeny = screeny;
     }
 
     public void update (Canvas canvas) {
+        int rectHeight = mScreeny / 18;
+        int textHeight = mScreeny / 16;
         Paint paint = new Paint();
-        paint.setColor(Color.BLUE);
-        canvas.drawRect(0,0, mScreenx, 70, paint);
-        paint.setColor(Color.argb(255,  249, 129, 0));
-        paint.setTextSize(40);
-        canvas.drawText("Score: " + mScore.getScore(), 10,50, paint);
+        paint.setColor(Color.WHITE);
+        canvas.drawRect(0,0, mScreenx, rectHeight, paint);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(textHeight);
+        String scoreText = "Score: " + mScore.getScore();
+        canvas.drawText(scoreText, (mScreenx - paint.measureText(scoreText)) / 2, textHeight - rectHeight / 5, paint);
     }
 }
