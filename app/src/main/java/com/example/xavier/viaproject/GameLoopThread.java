@@ -1,6 +1,7 @@
 package com.example.xavier.viaproject;
 
 import android.graphics.Canvas;
+import android.media.MediaPlayer;
 
 /**
  * Created by Xavier on 03/08/2016.
@@ -9,6 +10,8 @@ public class GameLoopThread extends Thread {
 
     private GameView mGameView;
     private boolean mIsRunning = false;
+    private MediaPlayer mMediaPlayer;
+    private int mSongPer;
 
     public GameLoopThread(GameView view) {
         this.mGameView = view;
@@ -18,14 +21,27 @@ public class GameLoopThread extends Thread {
         mIsRunning = run;
     }
 
+    public void initMusic (MediaPlayer mediaPlayer) {
+        mMediaPlayer = mediaPlayer;
+    }
+
+    public int getTime () {
+        return mSongPer;
+    }
+
     @Override
     public void run() {
-        long MSPT = 1000 / Constants.FPS; // milliseconds per tick
+        long mspt = 1000 / Constants.FPS; // milliseconds per tick
         long startTime;
         long sleepTime;
         Canvas c;
         int i = 0;
+
+        //Start playing the file
+        mMediaPlayer.start();
+
         while (mIsRunning) {
+            mSongPer = mMediaPlayer.getCurrentPosition();
             if(i % 20 == 0)
                 mGameView.addNote();
             c = null;
@@ -41,7 +57,7 @@ public class GameLoopThread extends Thread {
                 }
             }
             i++;
-            sleepTime = MSPT - (System.currentTimeMillis() - startTime);
+            sleepTime = mspt - (System.currentTimeMillis() - startTime);
             try {
                 if (sleepTime > 0)
                     sleep(sleepTime);

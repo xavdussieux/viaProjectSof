@@ -17,7 +17,8 @@ public class Constants {
 
     public static final long FPS = 50;
 
-    public static final int NOTE_SPEED = 10;
+    public static final int NOTE_START_Y = -200;
+    public static final int NOTE_SCROLLING_TIME = 2000;
 
     public static final String URI_PATH = "android.resource://com.example.xavier.viaproject/raw/";
 

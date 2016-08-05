@@ -1,12 +1,14 @@
 package com.example.xavier.viaproject;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +28,24 @@ public class Note  {
     private int mRedX;
     private int mGreenX;
     private int mYellowX;
-    private List<Point> mNotes;
-    private List<Point> mNotesToRemove;
+    private Score mScore;
+    private int mEndY;
+    private float mSpeed;
+    private GameLoopThread mGameLoopThread;
 
-    public Note (Context context, int screenX, int screenY) {
+    public class TypeNote {
+        public int spawnTime;
+        public Point pos;
+        public TypeNote (int spawnTime_ini, Point pos_ini) {
+            spawnTime = spawnTime_ini;
+            pos = pos_ini;
+        }
+    }
+
+    private List<TypeNote> mNotes;
+    private List<TypeNote> mNotesToRemove;
+
+    public Note (Context context, int screenX, int screenY, GameLoopThread gameLoopThread, Score score) {
 
         //resizing notes according to the player's screen
         mScreeny = screenY;
@@ -38,6 +54,10 @@ public class Note  {
         mRedX = screenX * 3/10;
         mYellowX = screenX * 5/10;
         mBlueX = screenX * 7/10;
+        mEndY = screenY;
+        mScore = score;
+        float interval = mEndY - Constants.NOTE_START_Y;
+        mSpeed = interval / Constants.NOTE_SCROLLING_TIME;
 
 
         mBlue = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluenote);
@@ -49,8 +69,9 @@ public class Note  {
         mRed = Bitmap.createScaledBitmap(mRed,mNoteSize, mNoteSize, false);
         mYellow = Bitmap.createScaledBitmap(mYellow,mNoteSize, mNoteSize, false);
 
-        mNotes = new ArrayList<Point>();
-        mNotesToRemove = new ArrayList<Point>();
+        mNotes = new ArrayList<TypeNote>();
+        mNotesToRemove = new ArrayList<TypeNote>();
+        mGameLoopThread = gameLoopThread;
     }
 
     public void spawn(String noteType) {
@@ -58,59 +79,44 @@ public class Note  {
         paint.setColor(Color.argb(255, 249, 129, 0));
         switch (noteType) {
             case "green":
-                mNotes.add(new Point(mGreenX, -200));
+                mNotes.add(new TypeNote(mGameLoopThread.getTime(), new Point(mGreenX, -200)));
                 break;
             case "red":
-                mNotes.add(new Point(mRedX, -200));
+                mNotes.add(new TypeNote(mGameLoopThread.getTime(), new Point(mRedX, -200)));
                 break;
             case "yellow":
-                mNotes.add(new Point(mYellowX, -200));
+                mNotes.add(new TypeNote(mGameLoopThread.getTime(), new Point(mYellowX, -200)));
                 break;
             case "blue":
-                mNotes.add(new Point(mBlueX, -200));
+                mNotes.add(new TypeNote(mGameLoopThread.getTime(), new Point(mBlueX, -200)));
                 break;
         }
     }
 
-    public int getNoteSize() {
-        return mNoteSize;
-    }
-
-    public List<Point> getNotes() {
-        return mNotes;
-    }
-
-    public void addNoteToRemove(Point note){
+    public void addNoteToRemove(TypeNote note){
         mNotesToRemove.add(note);
     }
 
     public void update(Canvas canvas) {
-        /* TODO make notes scroll not with FPS but with time
-         so we can assume that once a note is created
-         it will be at the bottom of the screen like
-         X ms later where X is constant */
-        Point del = null;
-        for (Point point : mNotes) {
-            if(point != null) {
-                Paint paint = new Paint();
-                paint.setColor(Color.argb(255, 249, 129, 0));
-                //switch needs constants
-                if (point.x == mGreenX)
-                    canvas.drawBitmap(mGreen, point.x, point.y, paint);
-                if (point.x == mRedX)
-                    canvas.drawBitmap(mRed, point.x, point.y, paint);
-                if (point.x == mYellowX)
-                    canvas.drawBitmap(mYellow, point.x, point.y, paint);
-                if (point.x == mBlueX)
-                    canvas.drawBitmap(mBlue, point.x, point.y, paint);
-                point.y += Constants.NOTE_SPEED;
-                if (point.y > mScreeny) {
-                    del = point;
-                }
+        TypeNote del = null;
+        for (TypeNote note : mNotes) {
+            Paint paint = new Paint();
+            paint.setColor(Color.argb(255, 249, 129, 0));
+            //switch needs constants
+            if (note.pos.x == mGreenX) canvas.drawBitmap(mGreen, note.pos.x, note.pos.y, paint);
+            if (note.pos.x == mRedX) canvas.drawBitmap(mRed, note.pos.x, note.pos.y, paint);
+            if (note.pos.x == mYellowX) canvas.drawBitmap(mYellow, note.pos.x, note.pos.y, paint);
+            if (note.pos.x == mBlueX) canvas.drawBitmap(mBlue, note.pos.x, note.pos.y, paint);
+            int dt = mGameLoopThread.getTime() - note.spawnTime;
+            note.pos.y = (int) (dt * mSpeed + Constants.NOTE_START_Y);
+            Log.e("posy", Integer.toString(note.pos.y));
+            if (note.pos.y > mScreeny) {
+                del = note;
             }
         }
         if(del != null){
             addNoteToRemove(del);
+            mScore.missed();
         }
         removeNotes();
     }
@@ -118,12 +124,27 @@ public class Note  {
     public void removeNotes(){
         if(mNotesToRemove != null && !mNotesToRemove.isEmpty()) {
             //remove notes
-            for (Point p : mNotesToRemove) {
-                mNotes.remove(p);
+            for (TypeNote note : mNotesToRemove) {
+                mNotes.remove(note);
             }
             //reinitialize array
             mNotesToRemove.removeAll(mNotesToRemove);
         }
+    }
+
+    public boolean onNoteWithDel(Point touchedPoint) {
+        int dx, dy;
+        TypeNote del = null;
+        for(TypeNote note : mNotes) {
+            dx = touchedPoint.x - note.pos.x;
+            dy = touchedPoint.y - note.pos.y;
+            if(dx > 0 && dx <  mNoteSize)
+                if (dy > 0 && dy < mNoteSize){
+                    addNoteToRemove(note);
+                    return true;
+                }
+        }
+        return false;
     }
 
 }

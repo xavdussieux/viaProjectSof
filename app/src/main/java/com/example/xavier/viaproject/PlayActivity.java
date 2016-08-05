@@ -13,7 +13,6 @@ import android.view.Display;
  */
 public class PlayActivity extends Activity{
 
-    private MediaPlayer mMediaPlayer;
     private int mSongPer;
 
     GameView gameView;
@@ -28,37 +27,32 @@ public class PlayActivity extends Activity{
         Point size = new Point();
         display.getSize(size);
 
-        gameView = new GameView(this, size.x, size.y);
-        setContentView(gameView);
-
-
         //setup music
         Intent intent = getIntent();
         String music_name = intent.getStringExtra("music_to_play");
         Uri music_uri = Uri.parse(Constants.URI_PATH + music_name);
-        mMediaPlayer = MediaPlayer.create(this, music_uri);
-        //Start playing the file
-        mSongPer = mMediaPlayer.getCurrentPosition();
-        mMediaPlayer.start();
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, music_uri);
 
+        gameView = new GameView(this, size.x, size.y, mediaPlayer);
+        setContentView(gameView);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         //refreshing song percentage
-        mSongPer = mMediaPlayer.getCurrentPosition() * 100 / mMediaPlayer.getDuration();
+        //mSongPer = mMediaPlayer.getCurrentPosition() * 100 / mMediaPlayer.getDuration();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mMediaPlayer.pause();
+        //mMediaPlayer.pause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mMediaPlayer.stop();
+        //mMediaPlayer.stop();
     }
 }

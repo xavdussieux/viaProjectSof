@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -25,9 +26,9 @@ public class GameView extends SurfaceView {
     private Score mScore;
     private String mNoteType[] = {"green", "red", "yellow", "blue"};
 
-    public GameView(Context context, int screenx, int screeny) {
+    public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer) {
         super(context);
-        init(context, screenx, screeny);
+        init(context, screenx, screeny, mediaPlayer);
     }
 
     public GameView(Context context, AttributeSet attrs) {
@@ -38,7 +39,7 @@ public class GameView extends SurfaceView {
         super(context, attrs, defStyle);
     }
 
-    private void init(Context context, int screenx, int screeny) {
+    private void init(Context context, int screenx, int screeny, final MediaPlayer mediaPlayer) {
         mGameLoopThread = new GameLoopThread(this);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
@@ -59,6 +60,7 @@ public class GameView extends SurfaceView {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 mGameLoopThread.setRunning(true);
+                mGameLoopThread.initMusic(mediaPlayer);
                 mGameLoopThread.start();
             }
 
@@ -68,8 +70,8 @@ public class GameView extends SurfaceView {
                 // Nothing to be done
             }
         });
-        mNote = new Note(context, screenx, screeny);
         mScore = new Score();
+        mNote = new Note(context, screenx, screeny, mGameLoopThread, mScore);
         mScoreBar = new ScoreBar(context, screenx, screeny, mScore);
     }
 
@@ -91,30 +93,12 @@ public class GameView extends SurfaceView {
         }
     }
 
-    protected boolean onNoteWithDel(Point touchedPoint) {
-        List<Point> noteList = mNote.getNotes();
-        int dx, dy, noteSize;
-        Point del = null;
-        for(Point p : noteList) {
-            dx = touchedPoint.x - p.x;
-            dy = touchedPoint.y - p.y;
-            noteSize = mNote.getNoteSize();
-            if(dx > 0 && dx <  noteSize)
-                if (dy > 0 && dy < noteSize){
-                    mNote.addNoteToRemove(p);
-                    return true;
-                }
-        }
-        return false;
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             Point point = new Point((int) event.getX(), (int) event.getY());
-            onNoteWithDel(point);
-            if (onNoteWithDel(point))
+            if (mNote.onNoteWithDel(point))
                 mScore.touched();
             else
                 mScore.missed();
