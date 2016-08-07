@@ -1,6 +1,7 @@
 package com.example.xavier.viaproject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class Note  {
     private int mGreenX;
     private int mYellowX;
     private Score mScore;
-    private int mEndY;
+    private float mEndY;
     private float mSpeed;
     private GameLoopThread mGameLoopThread;
 
@@ -45,7 +47,7 @@ public class Note  {
     private List<TypeNote> mNotes;
     private List<TypeNote> mNotesToRemove;
 
-    public Note (Context context, int screenX, int screenY, GameLoopThread gameLoopThread, Score score) {
+    public Note (Context context, int screenX, int screenY, GameLoopThread gameLoopThread, Score score, int scrolling_time) {
 
         //resizing notes according to the player's screen
         mScreeny = screenY;
@@ -54,10 +56,11 @@ public class Note  {
         mRedX = screenX * 3/10;
         mYellowX = screenX * 5/10;
         mBlueX = screenX * 7/10;
-        mEndY = screenY;
+        mEndY = screenY - 3 * mNoteSize / 2;
         mScore = score;
         float interval = mEndY - Constants.NOTE_START_Y;
-        mSpeed = interval / Constants.NOTE_SCROLLING_TIME;
+
+        mSpeed = interval / scrolling_time;
 
 
         mBlue = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluenote);

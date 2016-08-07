@@ -1,11 +1,13 @@
 package com.example.xavier.viaproject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -63,7 +65,7 @@ public class GameView extends SurfaceView {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 mGameLoopThread.setRunning(true);
-                mGameLoopThread.initMusic(context, mediaPlayer);
+                mGameLoopThread.initMusic(context, mediaPlayer, noteScrollingTime(context));
                 mGameLoopThread.start();
             }
 
@@ -74,10 +76,31 @@ public class GameView extends SurfaceView {
             }
         });
         mScore = new Score();
-        mNote = new Note(context, screenx, screeny, mGameLoopThread, mScore);
+        mNote = new Note(context, screenx, screeny, mGameLoopThread, mScore, noteScrollingTime(context));
         mScoreBar = new ScoreBar(context, screenx, screeny, mScore);
         mScreenSize = new Point(screenx, screeny);
         mDatabaseAccess = databaseAccess;
+    }
+
+    private int noteScrollingTime (Context context) {
+        int scrolling_time = 0;
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        switch (sharedPreferences.getString(Constants.PREF_DIFFICULTY_KEY, Constants.DEFAULT_DIFFICULTY)) {
+            case "easy":
+                scrolling_time = Constants.NOTE_SCROLLING_TIME_EASY;
+                break;
+            case "intermediate":
+                scrolling_time = Constants.NOTE_SCROLLING_TIME_INTERMEDIATE;
+                break;
+            case "hard":
+                scrolling_time = Constants.NOTE_SCROLLING_TIME_HARD;
+                break;
+        }
+        if(scrolling_time == 0) {
+            // ERROR INITIALIZE DIFFICULTY
+        }
+        return  scrolling_time;
     }
 
     public static String getRandom(String[] array) {

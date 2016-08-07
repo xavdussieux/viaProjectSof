@@ -18,6 +18,7 @@ public class GameLoopThread extends Thread {
     private long mCurrTime;
     private MusicTrack mMusicTrack;
     private int mDuration;
+    private int mOffsetStartMusic;
 
     public GameLoopThread(GameView view) {
         this.mGameView = view;
@@ -33,10 +34,11 @@ public class GameLoopThread extends Thread {
         return mIsRunning;
     }
 
-    public void initMusic (Context context, MediaPlayer mediaPlayer) {
+    public void initMusic (Context context, MediaPlayer mediaPlayer, int scrolling_time) {
         mMusicTrack = new MusicTrack(context, mGameView);
         mMediaPlayer = mediaPlayer;
-        mDuration = mediaPlayer.getDuration() + Constants.NOTE_SCROLLING_TIME + 100;
+        mDuration = mediaPlayer.getDuration() + scrolling_time + 100;
+        mOffsetStartMusic = scrolling_time;
     }
 
     public int getTime () {
@@ -55,7 +57,7 @@ public class GameLoopThread extends Thread {
             c = null;
             mCurrTime = System.currentTimeMillis();
             if (!mMediaPlayer.isPlaying()) {
-                if (getTime() > Constants.NOTE_SCROLLING_TIME)
+                if (getTime() > mOffsetStartMusic)
                     mMediaPlayer.start();
             }
 

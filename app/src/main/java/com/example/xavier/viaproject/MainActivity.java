@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected  void onResume(){
         super.onResume();
-        String username = mSharedPreferences.getString(Constants.PREF_NAME_KEY, "New player");
+        String username = mSharedPreferences.getString(Constants.PREF_NAME_KEY, Constants.DEFAULT_NAME);
         TextView textView = (TextView) findViewById(R.id.textName);
         textView.setText("Player : " + username);
     }
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void play(View view) {
-        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, "gotc");
+        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, Constants.DEFAULT_MUSIC);
         Intent intent = new Intent(this, PlayActivity.class);
         intent.putExtra("music_to_play", music);
         startActivity(intent);

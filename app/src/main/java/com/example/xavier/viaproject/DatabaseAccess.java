@@ -62,8 +62,8 @@ public class DatabaseAccess {
     }
 
     public void storeRecord (final Integer record){
-        String playerName = mSharedPreferences.getString(Constants.PREF_NAME_KEY, "New player");
-        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, "rhcp");
+        String playerName = mSharedPreferences.getString(Constants.PREF_NAME_KEY, Constants.DEFAULT_NAME);
+        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, Constants.DEFAULT_MUSIC);
         final DatabaseReference appLaunchCount = mDatabase.getReference("record/" + music + "/" + playerName + "_record");
 
         appLaunchCount.addListenerForSingleValueEvent(new ValueEventListener() {
