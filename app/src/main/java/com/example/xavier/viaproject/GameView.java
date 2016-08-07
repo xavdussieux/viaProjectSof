@@ -3,14 +3,15 @@ package com.example.xavier.viaproject;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -25,6 +26,7 @@ public class GameView extends SurfaceView {
     private ScoreBar mScoreBar;
     private Score mScore;
     private String mNoteType[] = {"green", "red", "yellow", "blue"};
+    private Point mScreenSize;
 
     public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer) {
         super(context);
@@ -73,6 +75,7 @@ public class GameView extends SurfaceView {
         mScore = new Score();
         mNote = new Note(context, screenx, screeny, mGameLoopThread, mScore);
         mScoreBar = new ScoreBar(context, screenx, screeny, mScore);
+        mScreenSize = new Point(screenx, screeny);
     }
 
     public static String getRandom(String[] array) {
@@ -87,9 +90,19 @@ public class GameView extends SurfaceView {
     @Override
     protected void onDraw(Canvas canvas) {
         if(canvas != null) {
-            canvas.drawColor(Color.BLACK);
-            mNote.update(canvas);
-            mScoreBar.update(canvas);
+            if(mGameLoopThread.IsRunning()) {
+                canvas.drawColor(Color.BLACK);
+                mNote.update(canvas);
+                mScoreBar.update(canvas);
+            }
+            else {
+                canvas.drawColor(Color.BLACK);
+                Paint paint = new Paint();
+                paint.setColor(Color.BLUE);
+                paint.setTextSize(mScreenSize.y / 16);
+                String scoreText = "Your score: " + mScore.getScore();
+                canvas.drawText(scoreText, (mScreenSize.x - paint.measureText(scoreText)) / 2, mScreenSize.y / 2 - mScreenSize.y / 32, paint);
+            }
         }
     }
 

@@ -10,23 +10,33 @@ import android.media.MediaPlayer;
 public class GameLoopThread extends Thread {
 
     private GameView mGameView;
+    private Object mPauseLock;
     private boolean mIsRunning = false;
+    private boolean mPaused;
     private MediaPlayer mMediaPlayer;
     private long mInitTime;
     private long mCurrTime;
     private MusicTrack mMusicTrack;
+    private int mDuration;
 
     public GameLoopThread(GameView view) {
         this.mGameView = view;
+        mPauseLock = new Object();
+        mPaused = false;
     }
 
     public void setRunning(boolean run) {
         mIsRunning = run;
     }
 
+    public boolean IsRunning () {
+        return mIsRunning;
+    }
+
     public void initMusic (Context context, MediaPlayer mediaPlayer) {
         mMusicTrack = new MusicTrack(context, mGameView);
         mMediaPlayer = mediaPlayer;
+        mDuration = mediaPlayer.getDuration() + Constants.NOTE_SCROLLING_TIME + 100;
     }
 
     public int getTime () {
@@ -38,7 +48,6 @@ public class GameLoopThread extends Thread {
         long mspt = 1000 / Constants.FPS; // milliseconds per tick
         long sleepTime;
         Canvas c;
-        int i = 0;
 
         mInitTime = System.currentTimeMillis();
 
@@ -61,7 +70,20 @@ public class GameLoopThread extends Thread {
                     mGameView.getHolder().unlockCanvasAndPost(c);
                 }
             }
-            i++;
+            synchronized (mPauseLock) {
+                while (mPaused) {
+                    try {
+                        mPauseLock.wait();
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+            }
+
+            if(getTime() > mDuration) {
+                onStop();
+            }
+
             sleepTime = mspt - (System.currentTimeMillis() - mCurrTime);
             try {
                 if (sleepTime > 0)
@@ -69,6 +91,34 @@ public class GameLoopThread extends Thread {
                 else
                     sleep(10);
             } catch (Exception e) {}
+        }
+    }
+
+    public void onPause() {
+        synchronized (mPauseLock) {
+            mPaused = true;
+        }
+    }
+
+    public void onResume() {
+        synchronized (mPauseLock) {
+            mPaused = false;
+            mPauseLock.notifyAll();
+        }
+    }
+
+    public void onStop() {
+        mIsRunning = false;
+        Canvas c = null;
+        try {
+            c = mGameView.getHolder().lockCanvas();
+            synchronized (mGameView.getHolder()) {
+                mGameView.onDraw(c);
+            }
+        } finally {
+            if (c != null) {
+                mGameView.getHolder().unlockCanvasAndPost(c);
+            }
         }
     }
 }

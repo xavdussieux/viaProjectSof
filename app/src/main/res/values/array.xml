@@ -23,11 +23,9 @@
     <array name="music_list">
         <item>The Black Keys - Gold On The Ceiling</item>
         <item>RHCP - Dark Necessities</item>
-        <item>Passenger - Let her go</item>
     </array>
     <array name="music_values">
         <item>gotc</item>
         <item>rhcp</item>
-        <item>passenger_let_her_go</item>
     </array>
 </resources>
