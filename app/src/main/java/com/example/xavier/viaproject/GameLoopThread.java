@@ -36,18 +36,19 @@ public class GameLoopThread extends Thread {
     @Override
     public void run() {
         long mspt = 1000 / Constants.FPS; // milliseconds per tick
-        long startTime;
         long sleepTime;
         Canvas c;
         int i = 0;
 
-        //Start playing the file
-        mMediaPlayer.start();
         mInitTime = System.currentTimeMillis();
 
         while (mIsRunning) {
             c = null;
             mCurrTime = System.currentTimeMillis();
+            if (!mMediaPlayer.isPlaying()) {
+                if (getTime() > Constants.NOTE_SCROLLING_TIME)
+                    mMediaPlayer.start();
+            }
             mMusicTrack.update(mCurrTime - mInitTime);
             try {
                 c = mGameView.getHolder().lockCanvas();
