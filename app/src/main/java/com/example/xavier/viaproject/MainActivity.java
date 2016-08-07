@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void play(View view) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String music = sharedPreferences.getString(Constants.PREF_MUSIC_KEY, "rhcp");
+        String music = sharedPreferences.getString(Constants.PREF_MUSIC_KEY, "gotc");
         Intent intent = new Intent(this, PlayActivity.class);
         intent.putExtra("music_to_play", music);
         startActivity(intent);

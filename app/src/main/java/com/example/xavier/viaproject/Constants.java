@@ -13,7 +13,7 @@ public class Constants {
     public static final int MULTIPLIER_STEP_X8 = 50;
 
     public static final String PREF_MUSIC_KEY = "pref_key_music";
-    public static final String PREF_NAME_KEY = "pref_key_music";
+    public static final String PREF_NAME_KEY = "pref_key_name";
 
     public static final long FPS = 100;
 

@@ -14,7 +14,6 @@ import android.view.Display;
 public class PlayActivity extends Activity{
 
     private int mSongPer;
-
     GameView gameView;
     MediaPlayer mMediaPlayer;
 

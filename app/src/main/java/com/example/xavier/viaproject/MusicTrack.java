@@ -36,8 +36,8 @@ public class MusicTrack {
 
     private void loadTrackFile (Context context) {
         Resources res = context.getResources();
-        TypedArray noteColor = res.obtainTypedArray(R.array.noteColor);
-        TypedArray noteOffset = res.obtainTypedArray(R.array.noteOffset);
+        TypedArray noteColor = res.obtainTypedArray(R.array.gotc_int_color);
+        TypedArray noteOffset = res.obtainTypedArray(R.array.gotc_int_offset);
 
         mNoteTrack = new ArrayList<TypeTrack>();
 
