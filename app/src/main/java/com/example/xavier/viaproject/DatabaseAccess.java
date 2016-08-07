@@ -2,6 +2,7 @@ package com.example.xavier.viaproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -25,19 +26,11 @@ public class DatabaseAccess {
     private Context mContext;
     private SharedPreferences mSharedPreferences;
 
-    public DatabaseAccess(Context context) {
+    public DatabaseAccess (Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        database.setLogLevel(Logger.Level.DEBUG);
         mDatabase = database;
         mContext = context;
-    }
-
-    public DatabaseAccess (Context context, SharedPreferences sharedPreferences) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        database.setLogLevel(Logger.Level.DEBUG);
-        mDatabase = database;
-        mContext = context;
-        mSharedPreferences = sharedPreferences;
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public void launchCount() {

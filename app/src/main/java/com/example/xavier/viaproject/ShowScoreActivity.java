@@ -18,13 +18,13 @@ public class ShowScoreActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_score);
-
-        initRecords();
-    }
-
-    public void initRecords () {
         List<Integer> bestRecordValues = new ArrayList<Integer>();
         List<String> bestRecordOwners = new ArrayList<String>();
+
+        initRecords(bestRecordOwners, bestRecordValues);
+    }
+
+    public void initRecords (List<String> bestRecordOwners, List<Integer> bestRecordValues) {
         // TODO get best score in database https://stringsonfire-40ff9.firebaseio.com/record/"music"
         // where "music" should be replaced by the music name
         /*

@@ -43,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void play(View view) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String music = sharedPreferences.getString(Constants.PREF_MUSIC_KEY, "gotc");
+        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, "gotc");
         Intent intent = new Intent(this, PlayActivity.class);
         intent.putExtra("music_to_play", music);
         startActivity(intent);
@@ -53,10 +52,6 @@ public class MainActivity extends AppCompatActivity {
     public void showScores (View view) {
         Intent intent = new Intent(this, ShowScoreActivity.class);
         startActivity(intent);
-    }
-
-    public void resume(View view) {
-
     }
 
     public void init () {
@@ -72,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseAccess databaseAccess = new DatabaseAccess(this, mSharedPreferences);
+        DatabaseAccess databaseAccess = new DatabaseAccess(this);
         databaseAccess.launchCount();
     }
 }

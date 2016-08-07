@@ -33,7 +33,9 @@ public class PlayActivity extends Activity{
         Uri music_uri = Uri.parse(Constants.URI_PATH + music_name);
         mMediaPlayer = MediaPlayer.create(this, music_uri);
 
-        gameView = new GameView(this, size.x, size.y, mMediaPlayer);
+        DatabaseAccess databaseAccess = new DatabaseAccess(this);
+
+        gameView = new GameView(this, size.x, size.y, mMediaPlayer, databaseAccess);
         setContentView(gameView);
     }
 
