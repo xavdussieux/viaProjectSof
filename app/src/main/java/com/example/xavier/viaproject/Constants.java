@@ -15,7 +15,7 @@ public class Constants {
     public static final String PREF_MUSIC_KEY = "pref_key_music";
     public static final String PREF_NAME_KEY = "pref_key_music";
 
-    public static final long FPS = 50;
+    public static final long FPS = 100;
 
     public static final int NOTE_START_Y = -200;
     public static final int NOTE_SCROLLING_TIME = 2000;

@@ -39,7 +39,7 @@ public class GameView extends SurfaceView {
         super(context, attrs, defStyle);
     }
 
-    private void init(Context context, int screenx, int screeny, final MediaPlayer mediaPlayer) {
+    private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer) {
         mGameLoopThread = new GameLoopThread(this);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
@@ -60,7 +60,7 @@ public class GameView extends SurfaceView {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 mGameLoopThread.setRunning(true);
-                mGameLoopThread.initMusic(mediaPlayer);
+                mGameLoopThread.initMusic(context, mediaPlayer);
                 mGameLoopThread.start();
             }
 
@@ -80,8 +80,8 @@ public class GameView extends SurfaceView {
         return array[rnd];
     }
 
-    public void addNote() {
-        mNote.spawn(getRandom(mNoteType));
+    public void addNote(int color) {
+        mNote.spawn(mNoteType[color]);
     }
 
     @Override

@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseAccess databaseAccess = new DatabaseAccess(this, mSharedPreferences);
-        databaseAccess.launchCount();
+        //DatabaseAccess databaseAccess = new DatabaseAccess(this, mSharedPreferences);
+        //databaseAccess.launchCount();
     }
 
     @Override

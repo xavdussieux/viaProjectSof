@@ -16,6 +16,7 @@ public class PlayActivity extends Activity{
     private int mSongPer;
 
     GameView gameView;
+    MediaPlayer mMediaPlayer;
 
 
     @Override
@@ -31,9 +32,9 @@ public class PlayActivity extends Activity{
         Intent intent = getIntent();
         String music_name = intent.getStringExtra("music_to_play");
         Uri music_uri = Uri.parse(Constants.URI_PATH + music_name);
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, music_uri);
+        mMediaPlayer = MediaPlayer.create(this, music_uri);
 
-        gameView = new GameView(this, size.x, size.y, mediaPlayer);
+        gameView = new GameView(this, size.x, size.y, mMediaPlayer);
         setContentView(gameView);
     }
 
@@ -47,12 +48,12 @@ public class PlayActivity extends Activity{
     @Override
     protected void onPause() {
         super.onPause();
-        //mMediaPlayer.pause();
+        mMediaPlayer.pause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //mMediaPlayer.stop();
+        mMediaPlayer.stop();
     }
 }

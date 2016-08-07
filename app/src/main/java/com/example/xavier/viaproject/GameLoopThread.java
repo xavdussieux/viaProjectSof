@@ -1,5 +1,6 @@
 package com.example.xavier.viaproject;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.media.MediaPlayer;
 
@@ -11,9 +12,9 @@ public class GameLoopThread extends Thread {
     private GameView mGameView;
     private boolean mIsRunning = false;
     private MediaPlayer mMediaPlayer;
-    private int mSongPer;
     private long mInitTime;
     private long mCurrTime;
+    private MusicTrack mMusicTrack;
 
     public GameLoopThread(GameView view) {
         this.mGameView = view;
@@ -23,7 +24,8 @@ public class GameLoopThread extends Thread {
         mIsRunning = run;
     }
 
-    public void initMusic (MediaPlayer mediaPlayer) {
+    public void initMusic (Context context, MediaPlayer mediaPlayer) {
+        mMusicTrack = new MusicTrack(context, mGameView);
         mMediaPlayer = mediaPlayer;
     }
 
@@ -44,10 +46,9 @@ public class GameLoopThread extends Thread {
         mInitTime = System.currentTimeMillis();
 
         while (mIsRunning) {
-            if(i % 20 == 0)
-                mGameView.addNote();
             c = null;
             mCurrTime = System.currentTimeMillis();
+            mMusicTrack.update(mCurrTime - mInitTime);
             try {
                 c = mGameView.getHolder().lockCanvas();
                 synchronized (mGameView.getHolder()) {
