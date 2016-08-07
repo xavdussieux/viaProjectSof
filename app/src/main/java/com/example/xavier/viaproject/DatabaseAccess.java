@@ -4,12 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+import com.firebase.client.Query;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 /**
  * Created by Xavier on 04/08/2016.
@@ -20,11 +25,19 @@ public class DatabaseAccess {
     private Context mContext;
     private SharedPreferences mSharedPreferences;
 
+    public DatabaseAccess(Context context) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.setLogLevel(Logger.Level.DEBUG);
+        mDatabase = database;
+        mContext = context;
+    }
+
     public DatabaseAccess (Context context, SharedPreferences sharedPreferences) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.setLogLevel(Logger.Level.DEBUG);
         mDatabase = database;
         mContext = context;
+        mSharedPreferences = sharedPreferences;
     }
 
     public void launchCount() {
@@ -57,7 +70,8 @@ public class DatabaseAccess {
 
     public void storeRecord (final Integer record){
         String playerName = mSharedPreferences.getString(Constants.PREF_NAME_KEY, "New player");
-        final DatabaseReference appLaunchCount = mDatabase.getReference(playerName + "_record");
+        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, "rhcp");
+        final DatabaseReference appLaunchCount = mDatabase.getReference("record/" + music + "/" + playerName + "_record");
 
         appLaunchCount.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

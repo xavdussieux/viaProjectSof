@@ -49,6 +49,7 @@ public class GameLoopThread extends Thread {
                 if (getTime() > Constants.NOTE_SCROLLING_TIME)
                     mMediaPlayer.start();
             }
+
             mMusicTrack.update(mCurrTime - mInitTime);
             try {
                 c = mGameView.getHolder().lockCanvas();

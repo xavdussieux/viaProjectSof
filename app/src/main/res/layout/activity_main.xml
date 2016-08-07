@@ -18,7 +18,7 @@
             android:text="Strings On Fire"
             android:textAlignment="center"
             android:clickable="false"
-            android:textSize="40dp"
+            android:textSize="40sp"
             android:textStyle="bold"
             android:typeface="serif" />
 
@@ -39,6 +39,13 @@
             android:layout_height="wrap_content"
             android:text="Resume game"
             android:id="@+id/resumeGame"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show records"
+            android:onClick="showScores" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

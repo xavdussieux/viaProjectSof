@@ -2,12 +2,15 @@ package com.example.xavier.viaproject;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,19 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        Button exitButton = (Button) findViewById(R.id.exitButton);
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                System.exit(0);
-            }
-        });
-
-        //DatabaseAccess databaseAccess = new DatabaseAccess(this, mSharedPreferences);
-        //databaseAccess.launchCount();
+        init();
     }
 
     @Override
@@ -59,7 +50,29 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void showScores (View view) {
+        Intent intent = new Intent(this, ShowScoreActivity.class);
+        startActivity(intent);
+    }
+
     public void resume(View view) {
 
+    }
+
+    public void init () {
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Button exitButton = (Button) findViewById(R.id.exitButton);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                System.exit(0);
+            }
+        });
+
+        DatabaseAccess databaseAccess = new DatabaseAccess(this, mSharedPreferences);
+        databaseAccess.launchCount();
     }
 }
