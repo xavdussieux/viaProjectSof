@@ -18,39 +18,45 @@
             android:text="Strings On Fire"
             android:textAlignment="center"
             android:clickable="false"
-            android:textSize="40sp"
             android:textStyle="bold"
-            android:typeface="serif" />
+            android:textSize="40sp"
+            android:typeface="serif"
+            android:id="@+id/titleText"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New player?"
             android:id="@+id/textName"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Play"
-            android:onClick="play" />
+            android:onClick="play"
+            android:id="@+id/playButton"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Show records"
-            android:onClick="showScores" />
+            android:onClick="showScores"
+            android:id="@+id/scoreButton"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Settings"
-            android:onClick="showSettings" />
+            android:onClick="showSettings"
+            android:id="@+id/settingButton"/>
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Quit"
             android:id="@+id/exitButton"/>
+
     </LinearLayout>
 
 </RelativeLayout>

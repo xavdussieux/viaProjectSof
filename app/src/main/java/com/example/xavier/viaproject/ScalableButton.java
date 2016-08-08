@@ -1,7 +1,9 @@
 package com.example.xavier.viaproject;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.widget.Button;
 
 /**
@@ -21,6 +23,6 @@ public class ScalableButton extends Button {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(width * 70 / 100, height);
+        setMeasuredDimension(width, height);
     }
 }

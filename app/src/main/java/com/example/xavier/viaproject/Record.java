@@ -6,8 +6,14 @@ package com.example.xavier.viaproject;
 public class Record {
     public String name;
     public int value;
+    public String music;
     public Record (String name, int value) {
         this.name = name;
         this.value = value;
+    }
+    public Record (String name, int value, String music) {
+        this.name = name;
+        this.value = value;
+        this.music = music;
     }
 }

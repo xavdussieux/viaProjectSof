@@ -25,6 +25,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ShowScoreActivity"
             android:screenOrientation="portrait" />
+        <service android:name=".NotificationService" >
+        </service>
     </application>
 
 </manifest>

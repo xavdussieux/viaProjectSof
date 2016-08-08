@@ -87,7 +87,7 @@ public class DatabaseAccess {
     }
 
     public interface leaderboardCallback {
-        public void callback(List<Record> leaderboardList);
+        void callback(List<Record> leaderboardList);
     }
 
     public void leaderboard(final List<Record> leaderboardList, final leaderboardCallback cb) {
@@ -136,7 +136,7 @@ public class DatabaseAccess {
                 i++;
                 j--;
             }
-        };
+        }
 
         return i;
     }
@@ -149,7 +149,55 @@ public class DatabaseAccess {
             quickSortRec(arr, index, right);
     }
 
+    public interface notificationCallback {
+        void callback (Record record);
+    }
+
     void quickSort(List<Record> arr) {
         quickSortRec(arr, 0, arr.size() - 1);
+    }
+
+    public void recordBreacking (final Record record, final notificationCallback cb) {
+        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, Constants.DEFAULT_MUSIC);
+        final DatabaseReference databaseReference = mDatabase.getReference("record/" + music);
+
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String newPlayer = dataSnapshot.getKey();
+                Integer newRecord = dataSnapshot.getValue(Integer.class);
+                if (!newPlayer.equals(record.name)) {
+                    if (newRecord > record.value) {
+                        cb.callback(new Record(newPlayer, newRecord));
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                String newPlayer = dataSnapshot.getKey();
+                Integer newRecord = dataSnapshot.getValue(Integer.class);
+                if (!newPlayer.equals(record.name)) {
+                    if (newRecord > record.value) {
+                        cb.callback(new Record(newPlayer, newRecord));
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

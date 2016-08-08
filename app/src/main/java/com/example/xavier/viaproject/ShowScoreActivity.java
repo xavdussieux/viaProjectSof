@@ -30,8 +30,6 @@ public class ShowScoreActivity extends Activity {
         databaseAccess.leaderboard(leaderboard, new DatabaseAccess.leaderboardCallback() {
                     @Override
                     public void callback(final List<Record> leaderboardList) {
-                        Log.e("size in showscore: ", Integer.toString(leaderboardList.size()));
-
                         TextView textView = null;
                         try {
                             textView = (TextView) findViewById(R.id.bestScore1);
