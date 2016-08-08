@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,45 +19,93 @@ public class ShowScoreActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_score);
-        List<Integer> bestRecordValues = new ArrayList<Integer>();
-        List<String> bestRecordOwners = new ArrayList<String>();
 
-        initRecords(bestRecordOwners, bestRecordValues);
+        initRecords();
     }
 
-    public void initRecords (List<String> bestRecordOwners, List<Integer> bestRecordValues) {
-        // TODO get best score in database https://stringsonfire-40ff9.firebaseio.com/record/"music"
-        // where "music" should be replaced by the music name
-        /*
-        TextView textView = (TextView) findViewById(R.id.bestScore1);
-        textView.setText("1 : " + bestRecordOwners.get(0) + ">>>>" + bestRecordValues.get(0));
+    public void initRecords() {
 
-        textView = (TextView) findViewById(R.id.bestScore2);
-        textView.setText("2 : " + bestRecordOwners.get(1) + ">>>>" + bestRecordValues.get(1));
+        DatabaseAccess databaseAccess = new DatabaseAccess(this);
+        List<Record> leaderboard = new ArrayList<Record>();
+        databaseAccess.leaderboard(leaderboard, new DatabaseAccess.leaderboardCallback() {
+                    @Override
+                    public void callback(final List<Record> leaderboardList) {
+                        Log.e("size in showscore: ", Integer.toString(leaderboardList.size()));
 
-        textView = (TextView) findViewById(R.id.bestScore3);
-        textView.setText("3 : " + bestRecordOwners.get(2) + ">>>>" + bestRecordValues.get(2));
+                        TextView textView = null;
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore1);
+                            textView.setText("1 : " + leaderboardList.get(0).name + ">>>>" + leaderboardList.get(0).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-        textView = (TextView) findViewById(R.id.bestScore4);
-        textView.setText("4 : " + bestRecordOwners.get(3) + ">>>>" + bestRecordValues.get(3));
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore2);
+                            textView.setText("2 : " + leaderboardList.get(1).name + ">>>>" + leaderboardList.get(1).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-        textView = (TextView) findViewById(R.id.bestScore5);
-        textView.setText("5 : " + bestRecordOwners.get(4) + ">>>>" + bestRecordValues.get(4));
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore3);
+                            textView.setText("3 : " + leaderboardList.get(2).name + ">>>>" + leaderboardList.get(2).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-        textView = (TextView) findViewById(R.id.bestScore6);
-        textView.setText("6 : " + bestRecordOwners.get(5) + ">>>>" + bestRecordValues.get(5));
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore4);
+                            textView.setText("4 : " + leaderboardList.get(3).name + ">>>>" + leaderboardList.get(3).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-        textView = (TextView) findViewById(R.id.bestScore7);
-        textView.setText("7 : " + bestRecordOwners.get(6) + ">>>>" + bestRecordValues.get(6));
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore5);
+                            textView.setText("5 : " + leaderboardList.get(4).name + ">>>>" + leaderboardList.get(4).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-        textView = (TextView) findViewById(R.id.bestScore8);
-        textView.setText("8 : " + bestRecordOwners.get(7) + ">>>>" + bestRecordValues.get(7));
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore6);
+                            textView.setText("6 : " + leaderboardList.get(5).name + ">>>>" + leaderboardList.get(5).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-        textView = (TextView) findViewById(R.id.bestScore9);
-        textView.setText("9 : " + bestRecordOwners.get(8) + ">>>>" + bestRecordValues.get(8));
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore7);
+                            textView.setText("7 : " + leaderboardList.get(6).name + ">>>>" + leaderboardList.get(6).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-        textView = (TextView) findViewById(R.id.bestScore10);
-        textView.setText("10 : " + bestRecordOwners.get(9) + ">>>>" + bestRecordValues.get(9));
-*/
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore8);
+                            textView.setText("8 : " + leaderboardList.get(7).name + ">>>>" + leaderboardList.get(7).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore9);
+                            textView.setText("9 : " + leaderboardList.get(8).name + ">>>>" + leaderboardList.get(8).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            textView = (TextView) findViewById(R.id.bestScore10);
+                            textView.setText("10 : " + leaderboardList.get(9).name + ">>>>" + leaderboardList.get(9).value);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+        );
+
     }
 }

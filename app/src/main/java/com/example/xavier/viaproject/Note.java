@@ -1,16 +1,12 @@
 package com.example.xavier.viaproject;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +27,6 @@ public class Note  {
     private int mGreenX;
     private int mYellowX;
     private Score mScore;
-    private float mEndY;
     private float mSpeed;
     private GameLoopThread mGameLoopThread;
 
@@ -56,9 +51,9 @@ public class Note  {
         mRedX = screenX * 3/10;
         mYellowX = screenX * 5/10;
         mBlueX = screenX * 7/10;
-        mEndY = screenY - 3 * mNoteSize / 2;
+        float endY = screenY - 3 * mNoteSize / 2;
         mScore = score;
-        float interval = mEndY - Constants.NOTE_START_Y;
+        float interval = endY - Constants.NOTE_START_Y;
 
         mSpeed = interval / scrolling_time;
 

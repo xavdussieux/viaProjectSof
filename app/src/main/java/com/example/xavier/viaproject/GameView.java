@@ -22,7 +22,6 @@ import java.util.Random;
 
 public class GameView extends SurfaceView {
 
-    private SurfaceHolder mSurfaceHolder;
     private GameLoopThread mGameLoopThread;
     private Note mNote;
     private ScoreBar mScoreBar;
@@ -46,8 +45,8 @@ public class GameView extends SurfaceView {
 
     private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer, DatabaseAccess databaseAccess) {
         mGameLoopThread = new GameLoopThread(this);
-        mSurfaceHolder = getHolder();
-        mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
+        SurfaceHolder surfaceHolder = getHolder();
+        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
@@ -58,6 +57,7 @@ public class GameView extends SurfaceView {
                         mGameLoopThread.join();
                         retry = false;
                     } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -96,9 +96,9 @@ public class GameView extends SurfaceView {
             case "hard":
                 scrolling_time = Constants.NOTE_SCROLLING_TIME_HARD;
                 break;
-        }
-        if(scrolling_time == 0) {
-            // ERROR INITIALIZE DIFFICULTY
+            default:
+                scrolling_time = Constants.NOTE_SCROLLING_TIME_EASY;
+                break;
         }
         return  scrolling_time;
     }
