@@ -67,7 +67,7 @@ public class DatabaseAccess {
     public void storeRecord (final Integer record){
         String playerName = mSharedPreferences.getString(Constants.PREF_NAME_KEY, Constants.DEFAULT_NAME);
         String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, Constants.DEFAULT_MUSIC);
-        final DatabaseReference databaseReference = mDatabase.getReference("record/" + music + "/" + playerName + "_record");
+        final DatabaseReference databaseReference = mDatabase.getReference("record/" + music + "/" + playerName);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -104,7 +104,6 @@ public class DatabaseAccess {
                 if (leaderboardList.size() > 1)
                     quickSort(leaderboardList);
                 cb.callback(leaderboardList);
-                Log.e("size :", Integer.toString(leaderboardList.size()));
             }
 
             @Override

@@ -6,25 +6,6 @@
         <com.example.xavier.viaproject.EditTextPreference
             android:key="pref_key_name"
             android:title="Set username" />
-        <CheckBoxPreference
-            android:key="checkBoxPref"
-            android:title="Titre"
-            android:summaryOn="Résumé quand sélectionné"
-            android:summaryOff="Résumé quand pas sélectionné"
-            android:defaultValue="true"/>
-        <EditTextPreference
-            android:key="editTextPref"
-            android:dialogTitle="Titre de la boîte"
-            android:positiveButtonText="Je valide !"
-            android:negativeButtonText="Je valide pas !"
-            android:title="Titre"
-            android:dependency="checkBoxPref" />
-        <ListPreference
-            android:key="listPref"
-            android:dialogTitle="Choisissez une couleur"
-            android:entries="@array/color_list"
-            android:entryValues="@array/color_values"
-            android:title="Choisir couleur" />
 
     </PreferenceCategory>
 
