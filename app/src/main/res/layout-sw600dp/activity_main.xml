@@ -19,7 +19,7 @@
             android:textAlignment="center"
             android:clickable="false"
             android:textStyle="bold"
-            android:textSize="40sp"
+            android:textSize="80sp"
             android:typeface="serif"
             android:id="@+id/titleText"/>
 
@@ -27,36 +27,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New player?"
+            android:textSize="30sp"
             android:id="@+id/textName"
             android:layout_gravity="center_horizontal"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="400dp"
+            android:layout_height="75dp"
             android:background="@drawable/play"
             android:onClick="play"
-            android:layout_margin="10dp"/>
+            android:layout_margin="20dp"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="400dp"
+            android:layout_height="75dp"
             android:background="@drawable/showrecords"
             android:onClick="showScores"
-            android:layout_margin="10dp"/>
+            android:layout_margin="20dp"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="400dp"
+            android:layout_height="75dp"
             android:background="@drawable/settings"
             android:onClick="showSettings"
-            android:layout_margin="10dp"/>
+            android:layout_margin="20dp"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="400dp"
+            android:layout_height="75dp"
             android:background="@drawable/quit"
             android:id="@+id/exitButton"
-            android:layout_margin="10dp"/>
+            android:layout_margin="20dp"/>
 
     </LinearLayout>
 
