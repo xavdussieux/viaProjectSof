@@ -158,7 +158,7 @@ public class Note {
             dx = touchedPoint.x - note.pos.x;
             dy = touchedPoint.y - note.pos.y;
             if ((Math.sqrt(dx * dx + dy * dy) < radius))
-                /*if (dy > 0 && dy < radius)*/ {
+            {
                 addNoteToRemove(note);
                 return true;
             }

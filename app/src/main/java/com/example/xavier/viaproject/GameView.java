@@ -2,6 +2,8 @@ package com.example.xavier.viaproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -32,7 +34,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
     private float mAccCurr;
     private float mAccLast;
     private long mLastPowerUse;
-
+    private Bitmap mBackground;
 
     private GameLoopThread mGameLoopThread;
     private Note mNote;
@@ -106,6 +108,9 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mScoreBar = new ScoreBar(context, screenx, screeny, mScore);
         mScreenSize = new Point(screenx, screeny);
         mDatabaseAccess = databaseAccess;
+        mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+        mBackground = Bitmap.createScaledBitmap(mBackground, screenx, screeny, false);
+
     }
 
     private int noteScrollingTime (Context context) {
@@ -151,7 +156,8 @@ public class GameView extends SurfaceView implements SensorEventListener{
     }
 
     public void updateScreen (Canvas canvas) {
-        canvas.drawColor(Color.BLACK);
+        Paint paintBackground = new Paint();
+        canvas.drawBitmap(mBackground,0,0,paintBackground);
         mNote.update(canvas);
         mScoreBar.update(canvas);
     }
