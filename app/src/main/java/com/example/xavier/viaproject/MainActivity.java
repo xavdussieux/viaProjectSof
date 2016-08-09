@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -30,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         String username = mSharedPreferences.getString(Constants.PREF_NAME_KEY, Constants.DEFAULT_NAME);
         TextView textView = (TextView) findViewById(R.id.textName);
-        textView.setText("Player : " + username);
+        String userText = "Player : " + username;
+        textView.setText(userText);
     }
 
     @Override

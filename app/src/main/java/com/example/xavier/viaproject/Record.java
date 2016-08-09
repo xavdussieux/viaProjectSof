@@ -11,9 +11,4 @@ public class Record {
         this.name = name;
         this.value = value;
     }
-    public Record (String name, int value, String music) {
-        this.name = name;
-        this.value = value;
-        this.music = music;
-    }
 }

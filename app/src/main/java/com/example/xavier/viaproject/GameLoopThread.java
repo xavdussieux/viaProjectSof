@@ -18,9 +18,7 @@ import android.widget.Toast;
 public class GameLoopThread extends Thread {
 
     private GameView mGameView;
-    private Object mPauseLock;
     private boolean mIsRunning = false;
-    private boolean mPaused;
     private MediaPlayer mMediaPlayer;
     private long mInitTime;
     private long mCurrTime;
@@ -31,8 +29,6 @@ public class GameLoopThread extends Thread {
 
     public GameLoopThread(GameView view, String musicName) {
         this.mGameView = view;
-        mPauseLock = new Object();
-        mPaused = false;
         mMusicName = musicName;
     }
 
@@ -84,15 +80,6 @@ public class GameLoopThread extends Thread {
                     mGameView.getHolder().unlockCanvasAndPost(c);
                 }
             }
-            synchronized (mPauseLock) {
-                while (mPaused) {
-                    try {
-                        mPauseLock.wait();
-                    } catch (InterruptedException e) {
-
-                    }
-                }
-            }
 
             if(getTime() > mDuration) {
                 onStop();
@@ -105,19 +92,6 @@ public class GameLoopThread extends Thread {
                 else
                     sleep(10);
             } catch (Exception e) {}
-        }
-    }
-
-    public void onPause() {
-        synchronized (mPauseLock) {
-            mPaused = true;
-        }
-    }
-
-    public void onResume() {
-        synchronized (mPauseLock) {
-            mPaused = false;
-            mPauseLock.notifyAll();
         }
     }
 

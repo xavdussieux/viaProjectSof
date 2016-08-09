@@ -13,7 +13,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -21,15 +20,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
-import java.util.Random;
-
 /**
  * Created by Xavier on 02/08/2016.
  */
 
 public class GameView extends SurfaceView implements SensorEventListener{
 
-    private SensorManager mSensorManager;
     private float mAcc;
     private float mAccCurr;
     private float mAccLast;
@@ -44,7 +40,6 @@ public class GameView extends SurfaceView implements SensorEventListener{
     private Point mScreenSize;
     private DatabaseAccess mDatabaseAccess;
     private boolean mUpdating = true;
-    private String mMusicName;
 
     public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
         super(context);
@@ -60,11 +55,9 @@ public class GameView extends SurfaceView implements SensorEventListener{
     }
 
     private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
-        mMusicName = musicName;
 
         //initializing accelerometer sensor manager
-        mSensorManager = sensorManager;
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_GAME);
         mAcc = 0.00f;
         mAccCurr = SensorManager.GRAVITY_EARTH;
@@ -72,7 +65,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mLastPowerUse = 0;//enabling power anytime
 
 
-        mGameLoopThread = new GameLoopThread(this, mMusicName);
+        mGameLoopThread = new GameLoopThread(this, musicName);
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(new SurfaceHolder.Callback() {
 
@@ -105,7 +98,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
         });
         mScore = new Score();
         mNote = new Note(context, screenx, screeny, mGameLoopThread, mScore, noteScrollingTime(context));
-        mScoreBar = new ScoreBar(context, screenx, screeny, mScore);
+        mScoreBar = new ScoreBar(screenx, screeny, mScore);
         mScreenSize = new Point(screenx, screeny);
         mDatabaseAccess = databaseAccess;
         mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);

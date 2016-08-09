@@ -14,7 +14,7 @@ public class ScoreBar {
     private int mScreenx;
     private int mScreeny;
 
-    public ScoreBar(Context context, int screenx, int screeny, Score score) {
+    public ScoreBar(int screenx, int screeny, Score score) {
         mScore = score;
         mScreenx = screenx;
         mScreeny = screeny;

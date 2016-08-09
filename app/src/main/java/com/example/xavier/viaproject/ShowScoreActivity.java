@@ -1,10 +1,7 @@
 package com.example.xavier.viaproject;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
