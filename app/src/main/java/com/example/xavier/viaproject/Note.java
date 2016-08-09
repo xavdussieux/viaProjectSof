@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.util.TypedValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ import java.util.List;
 public class Note {
 
     private int mScreeny;
+    private int mScreenx;
     private int mBlueX;
     private int mRedX;
     private int mGreenX;
@@ -24,6 +24,7 @@ public class Note {
     private float mSpeed;
     private float mRadius;
     private GameLoopThread mGameLoopThread;
+    private float mTouchedLimit;
 
     public class TypeNote {
         public int spawnTime;
@@ -42,16 +43,18 @@ public class Note {
 
         //resizing notes according to the player's screen
         mScreeny = screenY;
+        mScreenx = screenX;
         int noteSize = screenX / 6;
-        mGreenX = screenX * 55 / 355;// + fromDP(context,20);
-        mRedX = screenX * 139 / 355;// + fromDP(context,32);
-        mYellowX = screenX * 224 / 355;// + fromDP(context,45);
-        mBlueX = screenX * 305 / 355;// + fromDP(context,58);
+        mGreenX = screenX * 55 / 355;
+        mRedX = screenX * 139 / 355;
+        mYellowX = screenX * 224 / 355;
+        mBlueX = screenX * 305 / 355;
         float endY = screenY - 3 * noteSize / 2;
         mScore = score;
         float interval = endY - Constants.NOTE_START_Y;
         mRadius = mScreeny / 18;
 
+        mTouchedLimit = screenY - 4 * mRadius;
         mSpeed = interval / scrolling_time;
 
         mNotes = new ArrayList<TypeNote>();
@@ -89,20 +92,25 @@ public class Note {
             Paint paintRed = new Paint();
             Paint paintYellow = new Paint();
             Paint paintGreen = new Paint();
+            Paint paintWhite = new Paint();
 
             paintGreen.setColor(Color.argb(255, 0, 129, 0));
             paintRed.setColor(Color.argb(255, 255, 0, 0));
             paintYellow.setColor(Color.argb(255, 255, 255, 0));
             paintBlue.setColor(Color.argb(255, 0, 0, 255));
+            paintWhite.setColor(Color.WHITE);
 
 
             //switch needs constants
             if (note.pos.x == mGreenX)
                 canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintGreen);
-            if (note.pos.x == mRedX) canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintRed);
+            if (note.pos.x == mRedX)
+                canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintRed);
             if (note.pos.x == mYellowX)
                 canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintYellow);
-            if (note.pos.x == mBlueX) canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintBlue);
+            if (note.pos.x == mBlueX)
+                canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintBlue);
+            canvas.drawLine(0, mTouchedLimit, mScreenx, mTouchedLimit, paintYellow);
             int dt = mGameLoopThread.getTime() - note.spawnTime;
             note.pos.y = (int) (dt * mSpeed + Constants.NOTE_START_Y);
             if (note.pos.y > mScreeny) {
@@ -132,10 +140,11 @@ public class Note {
         for (TypeNote note : mNotes) {
             dx = touchedPoint.x - note.pos.x;
             dy = touchedPoint.y - note.pos.y;
-            if ((Math.sqrt(dx * dx + dy * dy) < mRadius))
-            {
-                addNoteToRemove(note);
-                return true;
+            if (touchedPoint.y > mTouchedLimit) {
+                if ((Math.sqrt(dx * dx + dy * dy) < mRadius)) {
+                    addNoteToRemove(note);
+                    return true;
+                }
             }
         }
         return false;
