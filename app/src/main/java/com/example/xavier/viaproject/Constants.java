@@ -20,10 +20,14 @@ public class Constants {
     public static final String PREF_MUSIC_KEY = "pref_key_music";
     public static final String PREF_NAME_KEY = "pref_key_name";
     public static final String PREF_DIFFICULTY_KEY = "pref_key_difficulty";
+    public static final String PREF_UPDATE_KEY = "pref_key_update";
+    public static final String PREF_RECORD_KEY = "pref_key_record";
 
     public static final String DEFAULT_MUSIC = "gotc";
     public static final String DEFAULT_NAME = "New player";
     public static final String DEFAULT_DIFFICULTY = "easy";
+    public static final String DEFAULT_UPDATE = "60";
+    public static final String DEFAULT_RECORD = "0";
 
     public static final long FPS = 100;
 

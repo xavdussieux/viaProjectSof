@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.jar.Attributes;
 
 /**
@@ -76,6 +77,8 @@ public class DatabaseAccess {
                 if(prevRecord == null || prevRecord < record) {
                     Toast.makeText(mContext, "New best record !", Toast.LENGTH_SHORT).show();
                     databaseReference.setValue(record);
+                    SharedPreferences.Editor editor = mSharedPreferences.edit();
+                    editor.putString(Constants.PREF_RECORD_KEY, Integer.toString(record));
                 }
             }
 
@@ -147,50 +150,38 @@ public class DatabaseAccess {
         if (index < right)
             quickSortRec(arr, index, right);
     }
-
-    public interface notificationCallback {
-        void callback (Record record);
-    }
-
     void quickSort(List<Record> arr) {
         quickSortRec(arr, 0, arr.size() - 1);
     }
 
+    public static Record getRandomRecord(List<Record> array) {
+        int rnd = new Random().nextInt(array.size());
+        return array.get(rnd);
+    }
+
+    public interface notificationCallback {
+        void callback (Record recordToShow);
+    }
+
     public void recordBreacking (final Record record, final notificationCallback cb) {
-        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, Constants.DEFAULT_MUSIC);
+        final String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, Constants.DEFAULT_MUSIC);
         final DatabaseReference databaseReference = mDatabase.getReference("record/" + music);
-
-        databaseReference.addChildEventListener(new ChildEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String newPlayer = dataSnapshot.getKey();
-                Integer newRecord = dataSnapshot.getValue(Integer.class);
-                if (!newPlayer.equals(record.name)) {
-                    if (newRecord > record.value) {
-                        cb.callback(new Record(newPlayer, newRecord));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Record> betterRecords = new ArrayList<>();
+                Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
+                for(DataSnapshot snapshot : iterable) {
+                    Record newRecord = new Record(snapshot.getKey(), snapshot.getValue(Integer.class));
+                    if(newRecord.value > record.value) {
+                        betterRecords.add(newRecord);
                     }
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                String newPlayer = dataSnapshot.getKey();
-                Integer newRecord = dataSnapshot.getValue(Integer.class);
-                if (!newPlayer.equals(record.name)) {
-                    if (newRecord > record.value) {
-                        cb.callback(new Record(newPlayer, newRecord));
-                    }
+                if(betterRecords.size() > 0) {
+                    Record recordToShow = getRandomRecord(betterRecords);
+                    recordToShow.music = music;
+                    cb.callback(recordToShow);
                 }
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override

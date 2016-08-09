@@ -6,6 +6,12 @@
         <com.example.xavier.viaproject.EditTextPreference
             android:key="pref_key_name"
             android:title="Set username" />
+        <com.example.xavier.viaproject.ListPreference
+            android:key="pref_key_update"
+            android:dialogTitle="Choose the update frequency"
+            android:entries="@array/update_list"
+            android:entryValues="@array/update_values"
+            android:title="Update frequency" />
 
     </PreferenceCategory>
 

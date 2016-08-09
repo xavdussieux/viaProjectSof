@@ -6,10 +6,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -24,9 +26,9 @@ import java.util.List;
  */
 public class NotificationService extends IntentService {
 
-    private static final int UPDATE_TIME = 60 * 1000;
+    private int mUpdateTime;
 
-    private Record mRecord;
+    private SharedPreferences mSharedPreferences;
 
     public NotificationService() {
         super("NotficationService");
@@ -44,7 +46,8 @@ public class NotificationService extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        mRecord = new Record("Cpadur", 0);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mUpdateTime = 60000 * Integer.parseInt(mSharedPreferences.getString(Constants.PREF_UPDATE_KEY, Constants.DEFAULT_UPDATE));
         return START_STICKY;
     }
 
@@ -57,10 +60,10 @@ public class NotificationService extends IntentService {
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         Notification n = new Notification.Builder(this)
-                .setContentTitle(record.name + "has beaten your record")
+                .setContentTitle(record.name + " has a better score")
                 .setContentText(record.music + " - " + record.value)
                 .setContentIntent(pIntent)
-                .setSmallIcon(android.R.drawable.ic_delete)
+                .setSmallIcon(R.drawable.sof_icon)
                 .setSound(sound)
                 .setAutoCancel(true)
                 .build();
@@ -73,24 +76,28 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        while (true) {
-            checkForNotification();
-            try {
-                Thread.sleep(UPDATE_TIME);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        if (mUpdateTime > 0) {
+            while (true) {
+                checkForNotification();
+                try {
+                    Thread.sleep(mUpdateTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     protected void checkForNotification() {
         DatabaseAccess databaseAccess = new DatabaseAccess(this);
-        /*
-        databaseAccess.recordBreacking(mRecord, new DatabaseAccess.notificationCallback() {
+        int recordValue = Integer.parseInt(mSharedPreferences.getString(Constants.PREF_RECORD_KEY, Constants.DEFAULT_RECORD));
+        String name = mSharedPreferences.getString(Constants.PREF_NAME_KEY, Constants.DEFAULT_NAME);
+        Record record = new Record(name, recordValue);
+        databaseAccess.recordBreacking(record, new DatabaseAccess.notificationCallback() {
             @Override
-            public void callback(Record record) {
+            public void callback(final Record record) {
                 showNotification(record);
             }
-        });*/
+        });
     }
 }
