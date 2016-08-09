@@ -134,11 +134,6 @@ public class GameView extends SurfaceView implements SensorEventListener{
         return  scrolling_time;
     }
 
-    public static String getRandom(String[] array) {
-        int rnd = new Random().nextInt(array.length);
-        return array[rnd];
-    }
-
     public void addNote(int color) {
         mNote.spawn(mNoteType[color]);
     }

@@ -69,7 +69,7 @@ public class Note {
 
         mSpeed = interval / scrolling_time;
 
-        mBlue = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluenote4);
+        mBlue = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluenote);
         mGreen = BitmapFactory.decodeResource(context.getResources(), R.drawable.greennote);
         mRed = BitmapFactory.decodeResource(context.getResources(), R.drawable.rednote);
         mYellow = BitmapFactory.decodeResource(context.getResources(), R.drawable.yellownote);
