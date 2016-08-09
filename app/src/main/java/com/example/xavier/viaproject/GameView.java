@@ -13,7 +13,6 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -191,16 +190,18 @@ public class GameView extends SurfaceView implements SensorEventListener{
 
         //Power value has to be locked for a given duration
         long timeMillis = System.currentTimeMillis();
-        if((timeMillis - mLastPowerUse) < Constants.POWER_DURATION){
-            //case where power has to be locked: do nothing
+        long diff = timeMillis - mLastPowerUse;
+        if(diff <= Constants.POWER_DURATION){
+            //case where power has to be locked: decrease power accumulated
+            mScore.setPowerAccumulated((int) (100 - (diff * 100 / Constants.POWER_DURATION)));
         }else{
             //if activated (by shaking)
-            if(mAcc > Constants.POWER_ACCELERATION){
-                this.getScore().setPowerMultiplier(Constants.POWER_MULTIPLIER);
+            if(mAcc > Constants.POWER_ACCELERATION && mScore.getPowerAccumulated() == 100){
+                this.getScore().setPowerOn(true);
                 mLastPowerUse = timeMillis;
                 Toast.makeText(this.getContext(), "Strings On Fire!", Toast.LENGTH_SHORT).show();
             }else{
-                this.getScore().setPowerMultiplier(Constants.DEFAULT_POWER_MULTIPLIER);
+                this.getScore().setPowerOn(false);
             }
         }
 
