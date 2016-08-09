@@ -2,6 +2,7 @@ package com.example.xavier.viaproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,11 +31,13 @@ public class DatabaseAccess {
     private FirebaseDatabase mDatabase;
     private Context mContext;
     private SharedPreferences mSharedPreferences;
+    private String mRank;
 
     public DatabaseAccess (Context context) {
         mDatabase = FirebaseDatabase.getInstance();
         mContext = context;
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        mRank = Constants.DEFAULT_RANK;
     }
 
     public void launchCount() {
@@ -79,6 +82,7 @@ public class DatabaseAccess {
                     databaseReference.setValue(record);
                     SharedPreferences.Editor editor = mSharedPreferences.edit();
                     editor.putString(Constants.PREF_RECORD_KEY, Integer.toString(record));
+                    editor.apply();
                 }
             }
 
@@ -87,6 +91,33 @@ public class DatabaseAccess {
                 // Handle errors here
             }
         });
+    }
+
+    public void rank (final Integer record) {
+        String music = mSharedPreferences.getString(Constants.PREF_MUSIC_KEY, Constants.DEFAULT_MUSIC);
+        final DatabaseReference databaseReference = mDatabase.getReference("record/" + music);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int rank = 1;
+                Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
+                for(DataSnapshot snapshot : iterable) {
+                    if (snapshot.getValue(Integer.class) > record) {
+                        rank ++;
+                    }
+                }
+                mRank = Integer.toString(rank);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public String getRank () {
+        return mRank;
     }
 
     public interface leaderboardCallback {

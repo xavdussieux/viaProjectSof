@@ -122,15 +122,20 @@ public class GameLoopThread extends Thread {
     public void onStop() {
         mIsRunning = false;
         Canvas c = null;
-        try {
-            c = mGameView.getHolder().lockCanvas();
-            synchronized (mGameView.getHolder()) {
-                mGameView.onDraw(c);
+        while (mGameView.updating()) {
+            try {
+                c = mGameView.getHolder().lockCanvas();
+                synchronized (mGameView.getHolder()) {
+                    mGameView.onDraw(c);
+                }
+            } finally {
+                if (c != null) {
+                    mGameView.getHolder().unlockCanvasAndPost(c);
+                }
             }
-        } finally {
-            if (c != null) {
-                mGameView.getHolder().unlockCanvasAndPost(c);
-            }
+            try {
+                sleep(1000);
+            } catch (Exception e) {}
         }
     }
 }

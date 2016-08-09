@@ -40,6 +40,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
     private String mNoteType[] = {"green", "red", "yellow", "blue"};
     private Point mScreenSize;
     private DatabaseAccess mDatabaseAccess;
+    private boolean mUpdating = true;
 
     public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager) {
         super(context);
@@ -151,14 +152,31 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mScoreBar.update(canvas);
     }
 
-    public void endGameScreen(Canvas canvas) {
-        canvas.drawColor(Color.BLACK);
+    public void endGameScreen(final Canvas canvas) {
+        canvas.drawColor(Color.WHITE);
+        int textSize = mScreenSize.y / 16;
         Paint paint = new Paint();
-        paint.setColor(Color.BLUE);
-        paint.setTextSize(mScreenSize.y / 16);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(textSize);
+        String headText = "Stats";
+        canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2, textSize * 3 / 2, paint);
         String scoreText = "Your score: " + mScore.getScore();
-        canvas.drawText(scoreText, (mScreenSize.x - paint.measureText(scoreText)) / 2, mScreenSize.y / 2 - mScreenSize.y / 32, paint);
+        canvas.drawText(scoreText, 0, textSize * 9 / 2, paint);
+        String perText = "% hit: " + mScore.getTouchedPer();
+        canvas.drawText(perText, 0, textSize * 6, paint);
+        String streakText = "Note streak: " + mScore.getBestStreak();
+        canvas.drawText(streakText, 0, textSize * 15 / 2, paint);
         mDatabaseAccess.storeRecord(mScore.getScore());
+        mDatabaseAccess.rank(mScore.getScore());
+        String rank = mDatabaseAccess.getRank();
+        if(!rank.equals(Constants.DEFAULT_RANK))
+            mUpdating = false;
+        String rankText = "Your rank: " + rank;
+        canvas.drawText(rankText, 0, textSize * 9, paint);
+    }
+
+    public boolean updating() {
+        return mUpdating;
     }
 
     @Override
