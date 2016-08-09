@@ -11,6 +11,11 @@ public class Constants {
     public static final int MULTIPLIER_STEP_X2 = 10;
     public static final int MULTIPLIER_STEP_X4 = 20;
     public static final int MULTIPLIER_STEP_X8 = 50;
+    public static final int POWER_ACCELERATION = 9;
+    public static final long POWER_DURATION = 5000;
+    public static final int POWER_MULTIPLIER = 2;
+    public static final int DEFAULT_POWER_MULTIPLIER = 1;
+
 
     public static final String PREF_MUSIC_KEY = "pref_key_music";
     public static final String PREF_NAME_KEY = "pref_key_name";

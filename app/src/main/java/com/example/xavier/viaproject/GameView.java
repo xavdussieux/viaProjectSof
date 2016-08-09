@@ -6,6 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
@@ -13,6 +17,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -20,7 +25,14 @@ import java.util.Random;
  * Created by Xavier on 02/08/2016.
  */
 
-public class GameView extends SurfaceView {
+public class GameView extends SurfaceView implements SensorEventListener{
+
+    private SensorManager mSensorManager;
+    private float mAcc;
+    private float mAccCurr;
+    private float mAccLast;
+    private long mLastPowerUse;
+
 
     private GameLoopThread mGameLoopThread;
     private Note mNote;
@@ -30,9 +42,9 @@ public class GameView extends SurfaceView {
     private Point mScreenSize;
     private DatabaseAccess mDatabaseAccess;
 
-    public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer, DatabaseAccess databaseAccess) {
+    public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager) {
         super(context);
-        init(context, screenx, screeny, mediaPlayer, databaseAccess);
+        init(context, screenx, screeny, mediaPlayer, databaseAccess, sensorManager);
     }
 
     public GameView(Context context, AttributeSet attrs) {
@@ -43,7 +55,17 @@ public class GameView extends SurfaceView {
         super(context, attrs, defStyle);
     }
 
-    private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer, DatabaseAccess databaseAccess) {
+    private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager) {
+        //initializing accelerometer sensor manager
+        mSensorManager = sensorManager;
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_GAME);
+        mAcc = 0.00f;
+        mAccCurr = SensorManager.GRAVITY_EARTH;
+        mAccLast = mAccCurr;
+        mLastPowerUse = 0;//enabling power anytime
+
+
         mGameLoopThread = new GameLoopThread(this);
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(new SurfaceHolder.Callback() {
@@ -151,5 +173,42 @@ public class GameView extends SurfaceView {
                 mScore.missed();
         }
         return super.onTouchEvent(event);
+    }
+
+    public Score getScore(){
+        return mScore;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        float x = sensorEvent.values[0];
+        float y = sensorEvent.values[1];
+        float z = sensorEvent.values[2];
+        mAccLast = mAccCurr;
+        mAccCurr = (float) Math.sqrt((double) (x * x) + (y * y) + (z * z));
+        float delta = mAccCurr - mAccLast;
+        mAcc = mAcc * 0.9f + delta;
+
+        //Power value has to be locked for a given duration
+        long timeMillis = System.currentTimeMillis();
+        if((timeMillis - mLastPowerUse) < Constants.POWER_DURATION){
+            //case where power has to be locked: do nothing
+        }else{
+            //if activated (by shaking)
+            if(mAcc > Constants.POWER_ACCELERATION){
+                this.getScore().setPowerMultiplier(Constants.POWER_MULTIPLIER);
+                mLastPowerUse = timeMillis;
+                Toast.makeText(this.getContext(), "Strings On Fire!", Toast.LENGTH_SHORT).show();
+            }else{
+                this.getScore().setPowerMultiplier(Constants.DEFAULT_POWER_MULTIPLIER);
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        //do nothing
     }
 }

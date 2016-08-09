@@ -1,5 +1,6 @@
 package com.example.xavier.viaproject;
 
+import android.provider.Settings;
 import android.widget.Toast;
 
 /**
@@ -43,15 +44,16 @@ public class Score {
         mScore -= Constants.MISS_POINTS;
     }
 
-    public void setPowerMultiplier(int powerMultiplier){
-        mPowerMultiplier = powerMultiplier;
+    public void setPowerMultiplier(int multiplier){
+        mPowerMultiplier = multiplier;
     }
 
-    public int getmMultiplier(){
+    public int getMultiplier(){
         return mMultiplier;
     }
 
     public int getScore () {
         return mScore;
     }
+
 }

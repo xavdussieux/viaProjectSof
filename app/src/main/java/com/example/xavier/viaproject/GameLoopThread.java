@@ -2,10 +2,18 @@ package com.example.xavier.viaproject;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.widget.Toast;
 
 /**
- * Created by Xavier on 03/08/2016.
+ * Created by Xavier on 03/08/2016
  */
 public class GameLoopThread extends Thread {
 
@@ -44,6 +52,8 @@ public class GameLoopThread extends Thread {
     public int getTime () {
         return (int) (mCurrTime - mInitTime);
     }
+
+
 
     @Override
     public void run() {
