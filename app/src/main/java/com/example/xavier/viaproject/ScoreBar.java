@@ -38,10 +38,10 @@ public class ScoreBar {
         circlePaint.setColor(color);
         int circleRadius = rectHeight / 2;
         textPaint.setTextSize(circleRadius);
-        canvas.drawCircle(circleRadius, circleRadius, circleRadius, circlePaint);
+        canvas.drawCircle(1 + circleRadius, 1 + circleRadius, circleRadius, circlePaint);
         canvas.drawText(Integer.toString(mScore.getPowerAccumulated()),
-                circleRadius - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
-                textHeight * 6 / 10, textPaint);
+                1 + circleRadius - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
+                1 + textHeight * 6 / 10, textPaint);
 
         String multiplier;
         switch (mScore.getMultiplier()){
@@ -80,8 +80,8 @@ public class ScoreBar {
         }
 
         circlePaint.setColor(color);
-        canvas.drawCircle(mScreenx - circleRadius, circleRadius, circleRadius, circlePaint);
+        canvas.drawCircle(mScreenx - circleRadius - 1, 1 + circleRadius, circleRadius, circlePaint);
         canvas.drawText(multiplier, mScreenx - circleRadius - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
-                textHeight * 6 / 10, textPaint);
+                textHeight * 6 / 10 , textPaint);
     }
 }

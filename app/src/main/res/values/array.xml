@@ -11,10 +11,12 @@
         <item>hard</item>
     </array>
     <array name="music_list">
+        <item>Daft Punk - Aerodynamics</item>
         <item>The Black Keys - Gold On The Ceiling</item>
         <item>RHCP - Dark Necessities</item>
     </array>
     <array name="music_values">
+        <item>daft</item>
         <item>gotc</item>
         <item>rhcp</item>
     </array>
