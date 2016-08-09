@@ -9,9 +9,9 @@ public class Constants {
     public static final int TOUCH_POINTS = 10;
     public static final int MISS_POINTS = 5;
     public static final int MULTIPLIER_STEP_X2 = 10;
-    public static final int MULTIPLIER_STEP_X4 = 20;
-    public static final int MULTIPLIER_STEP_X8 = 50;
-    public static final int POWER_ACCELERATION = 9;
+    public static final int MULTIPLIER_STEP_X3 = 20;
+    public static final int MULTIPLIER_STEP_X4 = 50;
+    public static final int POWER_ACCELERATION = 5;
     public static final long POWER_DURATION = 5000;
     public static final int POWER_MULTIPLIER = 2;
     public static final int DEFAULT_POWER_MULTIPLIER = 1;
@@ -28,6 +28,7 @@ public class Constants {
     public static final String DEFAULT_DIFFICULTY = "easy";
     public static final String DEFAULT_UPDATE = "60";
     public static final String DEFAULT_RECORD = "0";
+    public static final String DEFAULT_RANK = "Updating...";
 
     public static final long FPS = 100;
 

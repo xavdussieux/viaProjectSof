@@ -2,8 +2,6 @@ package com.example.xavier.viaproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,7 +13,6 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -38,12 +35,12 @@ public class GameView extends SurfaceView implements SensorEventListener{
 
     private GameLoopThread mGameLoopThread;
     private Note mNote;
-    private Bitmap mBackgroundBitmap;
     private ScoreBar mScoreBar;
     private Score mScore;
     private String mNoteType[] = {"green", "red", "yellow", "blue"};
     private Point mScreenSize;
     private DatabaseAccess mDatabaseAccess;
+    private boolean mUpdating = true;
 
     public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager) {
         super(context);
@@ -105,11 +102,6 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mScoreBar = new ScoreBar(context, screenx, screeny, mScore);
         mScreenSize = new Point(screenx, screeny);
         mDatabaseAccess = databaseAccess;
-        mBackgroundBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.background);
-        mBackgroundBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,screenx,screeny,false);
-        Canvas canvas = new Canvas();
-        Paint paint = new Paint();
-
     }
 
     private int noteScrollingTime (Context context) {
@@ -155,19 +147,36 @@ public class GameView extends SurfaceView implements SensorEventListener{
     }
 
     public void updateScreen (Canvas canvas) {
-        canvas.drawBitmap(mBackgroundBitmap, 0, 0, new Paint());
+        canvas.drawColor(Color.BLACK);
         mNote.update(canvas);
         mScoreBar.update(canvas);
     }
 
-    public void endGameScreen(Canvas canvas) {
-        canvas.drawColor(Color.BLACK);
+    public void endGameScreen(final Canvas canvas) {
+        canvas.drawColor(Color.WHITE);
+        int textSize = mScreenSize.y / 16;
         Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setTextSize(mScreenSize.y / 16);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(textSize);
+        String headText = "Stats";
+        canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2, textSize * 3 / 2, paint);
         String scoreText = "Your score: " + mScore.getScore();
-        canvas.drawText(scoreText, (mScreenSize.x - paint.measureText(scoreText)) / 2, mScreenSize.y / 2 - mScreenSize.y / 32, paint);
+        canvas.drawText(scoreText, 0, textSize * 9 / 2, paint);
+        String perText = "% hit: " + mScore.getTouchedPer();
+        canvas.drawText(perText, 0, textSize * 6, paint);
+        String streakText = "Note streak: " + mScore.getBestStreak();
+        canvas.drawText(streakText, 0, textSize * 15 / 2, paint);
         mDatabaseAccess.storeRecord(mScore.getScore());
+        mDatabaseAccess.rank(mScore.getScore());
+        String rank = mDatabaseAccess.getRank();
+        if(!rank.equals(Constants.DEFAULT_RANK))
+            mUpdating = false;
+        String rankText = "Your rank: " + rank;
+        canvas.drawText(rankText, 0, textSize * 9, paint);
+    }
+
+    public boolean updating() {
+        return mUpdating;
     }
 
     @Override
@@ -199,16 +208,18 @@ public class GameView extends SurfaceView implements SensorEventListener{
 
         //Power value has to be locked for a given duration
         long timeMillis = System.currentTimeMillis();
-        if((timeMillis - mLastPowerUse) < Constants.POWER_DURATION){
-            //case where power has to be locked: do nothing
+        long diff = timeMillis - mLastPowerUse;
+        if(diff <= Constants.POWER_DURATION){
+            //case where power has to be locked: decrease power accumulated
+            mScore.setPowerAccumulated((int) (100 - (diff * 100 / Constants.POWER_DURATION)));
         }else{
             //if activated (by shaking)
-            if(mAcc > Constants.POWER_ACCELERATION){
-                this.getScore().setPowerMultiplier(Constants.POWER_MULTIPLIER);
+            if(mAcc > Constants.POWER_ACCELERATION && mScore.getPowerAccumulated() == 100){
+                this.getScore().setPowerOn(true);
                 mLastPowerUse = timeMillis;
                 Toast.makeText(this.getContext(), "Strings On Fire!", Toast.LENGTH_SHORT).show();
             }else{
-                this.getScore().setPowerMultiplier(Constants.DEFAULT_POWER_MULTIPLIER);
+                this.getScore().setPowerOn(false);
             }
         }
 
