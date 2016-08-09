@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Strings On Fire</string>
+    <string name="default_player_message">New player?</string>
+    <string name="score">Score :</string>
+    <string name="name">Name :</string>
+    <string name="best_records">Best Records</string>
 </resources>

@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Best Records"
+        android:text="@string/best_records"
         android:textAlignment="center"
         android:clickable="false"
         android:textSize="40sp"
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="viewStart"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Name :" />
+                android:text="@string/name" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -182,7 +182,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -199,7 +199,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -225,7 +225,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="viewEnd"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Score :" />
+                android:text="@string/score" />
 
             <ImageView
                 android:layout_width="match_parent"
