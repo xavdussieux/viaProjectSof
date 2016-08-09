@@ -2,6 +2,8 @@ package com.example.xavier.viaproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -36,6 +38,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
 
     private GameLoopThread mGameLoopThread;
     private Note mNote;
+    private Bitmap mBackgroundBitmap;
     private ScoreBar mScoreBar;
     private Score mScore;
     private String mNoteType[] = {"green", "red", "yellow", "blue"};
@@ -102,6 +105,11 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mScoreBar = new ScoreBar(context, screenx, screeny, mScore);
         mScreenSize = new Point(screenx, screeny);
         mDatabaseAccess = databaseAccess;
+        mBackgroundBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.background);
+        mBackgroundBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,screenx,screeny,false);
+        Canvas canvas = new Canvas();
+        Paint paint = new Paint();
+
     }
 
     private int noteScrollingTime (Context context) {
@@ -147,7 +155,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
     }
 
     public void updateScreen (Canvas canvas) {
-        canvas.drawColor(Color.BLACK);
+        canvas.drawBitmap(mBackgroundBitmap, 0, 0, new Paint());
         mNote.update(canvas);
         mScoreBar.update(canvas);
     }
@@ -155,7 +163,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
     public void endGameScreen(Canvas canvas) {
         canvas.drawColor(Color.BLACK);
         Paint paint = new Paint();
-        paint.setColor(Color.BLUE);
+        paint.setColor(Color.RED);
         paint.setTextSize(mScreenSize.y / 16);
         String scoreText = "Your score: " + mScore.getScore();
         canvas.drawText(scoreText, (mScreenSize.x - paint.measureText(scoreText)) / 2, mScreenSize.y / 2 - mScreenSize.y / 32, paint);
