@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -41,10 +42,11 @@ public class GameView extends SurfaceView implements SensorEventListener{
     private Point mScreenSize;
     private DatabaseAccess mDatabaseAccess;
     private boolean mUpdating = true;
+    private String mMusicName;
 
-    public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager) {
+    public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
         super(context);
-        init(context, screenx, screeny, mediaPlayer, databaseAccess, sensorManager);
+        init(context, screenx, screeny, mediaPlayer, databaseAccess, sensorManager, musicName);
     }
 
     public GameView(Context context, AttributeSet attrs) {
@@ -55,7 +57,9 @@ public class GameView extends SurfaceView implements SensorEventListener{
         super(context, attrs, defStyle);
     }
 
-    private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager) {
+    private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
+        mMusicName = musicName;
+
         //initializing accelerometer sensor manager
         mSensorManager = sensorManager;
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -66,7 +70,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mLastPowerUse = 0;//enabling power anytime
 
 
-        mGameLoopThread = new GameLoopThread(this);
+        mGameLoopThread = new GameLoopThread(this, mMusicName);
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(new SurfaceHolder.Callback() {
 

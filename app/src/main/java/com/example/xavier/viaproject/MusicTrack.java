@@ -19,6 +19,7 @@ public class MusicTrack {
 
     private GameView mGameView;
     private List<TypeTrack> mNoteTrack;
+    private String mMusicName;
 
     public class TypeTrack {
         int color;
@@ -29,15 +30,31 @@ public class MusicTrack {
         }
     }
 
-    public MusicTrack (Context context, GameView gameView) {
+    public MusicTrack (Context context, GameView gameView, String musicName) {
         mGameView = gameView;
+        mMusicName = musicName;
         loadTrackFile(context);
     }
 
     private void loadTrackFile (Context context) {
         Resources res = context.getResources();
-        TypedArray noteColor = res.obtainTypedArray(R.array.gotc_int_color);
-        TypedArray noteOffset = res.obtainTypedArray(R.array.gotc_int_offset);
+        TypedArray noteColor, noteOffset;
+
+        switch (mMusicName){
+            case "daft":
+                noteColor = res.obtainTypedArray(R.array.daft_int_color);
+                noteOffset = res.obtainTypedArray(R.array.daft_int_offset);
+                break;
+            case "gotc":
+                noteColor = res.obtainTypedArray(R.array.gotc_int_color);
+                noteOffset = res.obtainTypedArray(R.array.gotc_int_offset);
+                break;
+            default:
+                noteColor = res.obtainTypedArray(R.array.gotc_int_color);
+                noteOffset = res.obtainTypedArray(R.array.gotc_int_offset);
+                break;
+        }
+
 
         mNoteTrack = new ArrayList<TypeTrack>();
 

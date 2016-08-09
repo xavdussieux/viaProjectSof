@@ -43,7 +43,7 @@ public class PlayActivity extends Activity{
         DatabaseAccess databaseAccess = new DatabaseAccess(this);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        gameView = new GameView(this, size.x, size.y, mMediaPlayer, databaseAccess, mSensorManager);
+        gameView = new GameView(this, size.x, size.y, mMediaPlayer, databaseAccess, mSensorManager, music_name);
         setContentView(gameView);
 
 
