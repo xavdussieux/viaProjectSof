@@ -32,6 +32,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
     private float mAccLast;
     private long mLastPowerUse;
     private Bitmap mBackground;
+    private Bitmap mBackgroundEnd;
 
     private GameLoopThread mGameLoopThread;
     private Note mNote;
@@ -104,6 +105,8 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mDatabaseAccess = databaseAccess;
         mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
         mBackground = Bitmap.createScaledBitmap(mBackground, screenx, screeny, false);
+        mBackgroundEnd = BitmapFactory.decodeResource(context.getResources(), R.drawable.end_game_background);
+        mBackgroundEnd = Bitmap.createScaledBitmap(mBackgroundEnd, screenx, screeny, false);
 
     }
 
@@ -145,17 +148,17 @@ public class GameView extends SurfaceView implements SensorEventListener{
     }
 
     public void updateScreen (Canvas canvas) {
-        Paint paintBackground = new Paint();
-        canvas.drawBitmap(mBackground,0,0,paintBackground);
+        canvas.drawBitmap(mBackground,0,0,new Paint());
         mNote.update(canvas);
         mScoreBar.update(canvas);
     }
 
     public void endGameScreen(final Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
+
+        canvas.drawBitmap(mBackgroundEnd,0,0,new Paint());
         int textSize = mScreenSize.y / 16;
         Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.WHITE);
         paint.setTextSize(textSize);
         String headText = "Stats";
         canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2, textSize * 3 / 2, paint);

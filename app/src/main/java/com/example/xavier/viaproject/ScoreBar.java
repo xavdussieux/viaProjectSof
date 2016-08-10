@@ -36,8 +36,10 @@ public class ScoreBar {
         textPaint.setColor(Color.BLACK);
         int color = Color.argb(255, 240, 150 - mScore.getPowerAccumulated(), 10);
         circlePaint.setColor(color);
+        circlePaint.setAntiAlias(true);
         int circleRadius = rectHeight / 2;
         textPaint.setTextSize(circleRadius);
+        textPaint.setAntiAlias(true);
         canvas.drawCircle(1 + circleRadius, 1 + circleRadius, circleRadius, circlePaint);
         canvas.drawText(Integer.toString(mScore.getPowerAccumulated()),
                 1 + circleRadius - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,

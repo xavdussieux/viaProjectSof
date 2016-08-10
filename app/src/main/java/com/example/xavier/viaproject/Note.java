@@ -109,6 +109,12 @@ public class Note {
                 paintYellow.setColor(Color.argb(255, 255, 255, 0));
                 paintBlue.setColor(Color.argb(255, 0, 0, 255));
             }
+
+            paintGreen.setAntiAlias(true);
+            paintRed.setAntiAlias(true);
+            paintYellow.setAntiAlias(true);
+            paintBlue.setAntiAlias(true);
+
             paintWhite.setColor(Color.WHITE);
             float perspectiveRatio = (note.pos.y - mLeakPoint) / (mScreeny - mLeakPoint);
             float dx = note.pos.x - mScreenx / 2;
