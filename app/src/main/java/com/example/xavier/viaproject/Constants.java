@@ -12,7 +12,7 @@ public class Constants {
     public static final int MULTIPLIER_STEP_X3 = 20;
     public static final int MULTIPLIER_STEP_X4 = 50;
     public static final int POWER_ACCELERATION = 5;
-    public static final long POWER_DURATION = 5000;
+    public static final long POWER_DURATION = 7000;
     public static final int POWER_MULTIPLIER = 2;
     public static final int DEFAULT_POWER_MULTIPLIER = 1;
 

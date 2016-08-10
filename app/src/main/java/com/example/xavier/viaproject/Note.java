@@ -56,7 +56,7 @@ public class Note {
         float interval = mEndY - Constants.NOTE_START_Y;
         mLeakPoint = -1 * screenY / 2;
 
-        mTouchedLimit = screenY - 6 * mNoteRadius;
+        mTouchedLimit = screenY - 4 * mNoteRadius;
         mSpeed = interval / scrolling_time;
 
         mNotes = new ArrayList<TypeNote>();
@@ -153,7 +153,7 @@ public class Note {
             dx = touchedPoint.x - note.pos.x;
             dy = touchedPoint.y - note.pos.y;
             if (touchedPoint.y > mTouchedLimit) {
-                if ((Math.sqrt(dx * dx + dy * dy) < mNoteRadius)) {
+                if (Math.sqrt(dx * dx + dy * dy) < mNoteRadius * 11 /10) {
                     addNoteToRemove(note);
                     return true;
                 }

@@ -13,7 +13,7 @@ public class Score {
     private int mBestStreak;
     private int mNoteNum;
     private boolean mIsPowerOn;
-    private int mMissNum;
+    private int mGoodNum;
 
     public Score() {
         mScore = 0;
@@ -24,12 +24,13 @@ public class Score {
         mIsPowerOn = false;
         mBestStreak = 0;
         mNoteNum = 0;
-        mMissNum = 0;
+        mGoodNum = 0;
     }
 
     public void touched () {
         mHitStreak++;
         mNoteNum++;
+        mGoodNum++;
         if(mHitStreak < Constants.MULTIPLIER_STEP_X2){
             mMultiplier = 1;
         } else{
@@ -48,12 +49,18 @@ public class Score {
     }
 
     public int getBestStreak(){
+        if(mBestStreak == 0){
+            //no note missed
+            return mNoteNum;
+        }
         return mBestStreak;
     }
 
     public int getTouchedPer(){
-        return (100 -  (mMissNum * 100 / mNoteNum));
+        //rounding down
+        return mGoodNum * 100 / mNoteNum;
     }
+
     public void missed () {
         if(mHitStreak > mBestStreak){
             mBestStreak = mHitStreak;
@@ -61,7 +68,6 @@ public class Score {
         mHitStreak = 0;
         mMultiplier = 0;
         mNoteNum++;
-        mMissNum++;
         mScore -= Constants.MISS_POINTS;
     }
 
