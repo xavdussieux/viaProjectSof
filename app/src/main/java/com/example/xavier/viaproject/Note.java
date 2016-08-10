@@ -94,12 +94,19 @@ public class Note {
             Paint paintGreen = new Paint();
             Paint paintWhite = new Paint();
 
-            paintGreen.setColor(Color.argb(255, 0, 129, 0));
-            paintRed.setColor(Color.argb(255, 255, 0, 0));
-            paintYellow.setColor(Color.argb(255, 255, 255, 0));
-            paintBlue.setColor(Color.argb(255, 0, 0, 255));
+            if(mScore.getIsPowerOn()){
+                //if power is activated, all the notes should be orange
+                paintGreen.setColor(Color.argb(255, 240, 50, 10));
+                paintRed.setColor(Color.argb(255, 240, 50, 10));
+                paintYellow.setColor(Color.argb(255, 240, 50, 10));
+                paintBlue.setColor(Color.argb(255, 240, 50, 10));
+            }else {
+                paintGreen.setColor(Color.argb(255, 0, 129, 0));
+                paintRed.setColor(Color.argb(255, 255, 0, 0));
+                paintYellow.setColor(Color.argb(255, 255, 255, 0));
+                paintBlue.setColor(Color.argb(255, 0, 0, 255));
+            }
             paintWhite.setColor(Color.WHITE);
-
 
             //switch needs constants
             if (note.pos.x == mGreenX)
