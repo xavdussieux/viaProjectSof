@@ -7,7 +7,9 @@
 <array name="daft_int_offset">
 
 <item>484</item>     <!-- 0:00:001  (num 1) -->
+    <item>484</item>
 <item>967</item>     <!-- 0:00:484  (num 2) -->
+    <item>967</item>
 <item>1450</item>     <!-- 0:00:967  (num 3) -->
 <item>1933</item>     <!-- 0:01:450  (num 4) -->
 <item>2416</item>     <!-- 0:01:933  (num 5) -->
@@ -81,7 +83,9 @@
     <array name="daft_int_color">
 
 <item>0</item>     <!-- 0:00:001 (num 1) -->
+        <item>2</item>
 <item>0</item>     <!-- 0:00:484 (num 2) -->
+        <item>3</item>
 <item>0</item>     <!-- 0:00:967 (num 3) -->
 <item>2</item>     <!-- 0:01:450 (num 4) -->
 <item>3</item>     <!-- 0:01:933 (num 5) -->

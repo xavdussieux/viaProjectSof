@@ -15,6 +15,7 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -180,15 +181,26 @@ public class GameView extends SurfaceView implements SensorEventListener{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if(event.getAction() == MotionEvent.ACTION_DOWN){
-            Point point = new Point((int) event.getX(), (int) event.getY());
-            if (mNote.onNoteWithDel(point))
-                mScore.touched();
-            else
-                mScore.missed();
+        int actionMask = event.getActionMasked();
+        int pointerIndex = event.getActionIndex();
+        Point point;
+        switch (actionMask) {
+            case MotionEvent.ACTION_DOWN:
+                point = new Point((int) event.getX(), (int) event.getY());
+                if (mNote.onNoteWithDel(point)) mScore.touched();
+                else mScore.missed();
+                break;
+
+            case MotionEvent.ACTION_POINTER_DOWN:
+                point = new Point((int) event.getX(pointerIndex), (int) event.getY(pointerIndex));
+                if (mNote.onNoteWithDel(point)) mScore.touched();
+                else mScore.missed();
+                break;
         }
-        return super.onTouchEvent(event);
+        return true;
     }
+
+
 
     public Score getScore(){
         return mScore;
