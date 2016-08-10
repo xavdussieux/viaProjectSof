@@ -1,6 +1,5 @@
 package com.example.xavier.viaproject;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -22,9 +21,11 @@ public class Note {
     private int mYellowX;
     private Score mScore;
     private float mSpeed;
-    private float mRadius;
+    private float mNoteRadius;
     private GameLoopThread mGameLoopThread;
     private float mTouchedLimit;
+    private float mEndY;
+    private float mLeakPoint;
 
     public class TypeNote {
         public int spawnTime;
@@ -39,27 +40,29 @@ public class Note {
     private List<TypeNote> mNotes;
     private List<TypeNote> mNotesToRemove;
 
-    public Note(Context context, int screenX, int screenY, GameLoopThread gameLoopThread, Score score, int scrolling_time) {
+    public Note(int screenX, int screenY, GameLoopThread gameLoopThread, Score score, int scrolling_time) {
 
         //resizing notes according to the player's screen
         mScreeny = screenY;
         mScreenx = screenX;
-        int noteSize = screenX / 6;
-        mGreenX = screenX * 55 / 355;
-        mRedX = screenX * 139 / 355;
-        mYellowX = screenX * 224 / 355;
-        mBlueX = screenX * 305 / 355;
-        float endY = screenY - 3 * noteSize / 2;
-        mScore = score;
-        float interval = endY - Constants.NOTE_START_Y;
-        mRadius = mScreeny / 18;
+        mGreenX = screenX / 8;
+        mRedX = screenX * 3 / 8;
+        mYellowX = screenX * 5 / 8;
+        mBlueX = screenX * 7 / 8;
 
-        mTouchedLimit = screenY - 4 * mRadius;
+        mNoteRadius = mScreenx / 8;
+
+        mEndY = screenY - 3 * mNoteRadius;
+        float interval = mEndY - Constants.NOTE_START_Y;
+        mLeakPoint = -1 * screenY / 2;
+
+        mTouchedLimit = screenY - 6 * mNoteRadius;
         mSpeed = interval / scrolling_time;
 
         mNotes = new ArrayList<TypeNote>();
         mNotesToRemove = new ArrayList<TypeNote>();
         mGameLoopThread = gameLoopThread;
+        mScore = score;
     }
 
     public void spawn(String noteType) {
@@ -107,16 +110,18 @@ public class Note {
                 paintBlue.setColor(Color.argb(255, 0, 0, 255));
             }
             paintWhite.setColor(Color.WHITE);
-
+            float perspectiveRatio = (note.pos.y - mLeakPoint) / (mScreeny - mLeakPoint);
+            float dx = note.pos.x - mScreenx / 2;
+            float newX = mScreenx / 2 + dx * perspectiveRatio;
             //switch needs constants
             if (note.pos.x == mGreenX)
-                canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintGreen);
+                canvas.drawCircle((int) newX, note.pos.y, mNoteRadius * perspectiveRatio, paintGreen);
             if (note.pos.x == mRedX)
-                canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintRed);
+                canvas.drawCircle((int) newX, note.pos.y, mNoteRadius * perspectiveRatio, paintRed);
             if (note.pos.x == mYellowX)
-                canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintYellow);
+                canvas.drawCircle((int) newX, note.pos.y, mNoteRadius * perspectiveRatio, paintYellow);
             if (note.pos.x == mBlueX)
-                canvas.drawCircle(note.pos.x, note.pos.y, mRadius, paintBlue);
+                canvas.drawCircle((int) newX, note.pos.y, mNoteRadius * perspectiveRatio, paintBlue);
             canvas.drawLine(0, mTouchedLimit, mScreenx, mTouchedLimit, paintYellow);
             int dt = mGameLoopThread.getTime() - note.spawnTime;
             note.pos.y = (int) (dt * mSpeed + Constants.NOTE_START_Y);
@@ -148,7 +153,7 @@ public class Note {
             dx = touchedPoint.x - note.pos.x;
             dy = touchedPoint.y - note.pos.y;
             if (touchedPoint.y > mTouchedLimit) {
-                if ((Math.sqrt(dx * dx + dy * dy) < mRadius)) {
+                if ((Math.sqrt(dx * dx + dy * dy) < mNoteRadius)) {
                     addNoteToRemove(note);
                     return true;
                 }

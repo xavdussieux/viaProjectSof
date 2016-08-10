@@ -98,7 +98,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
             }
         });
         mScore = new Score();
-        mNote = new Note(context, screenx, screeny, mGameLoopThread, mScore, noteScrollingTime(context));
+        mNote = new Note(screenx, screeny, mGameLoopThread, mScore, noteScrollingTime(context));
         mScoreBar = new ScoreBar(screenx, screeny, mScore);
         mScreenSize = new Point(screenx, screeny);
         mDatabaseAccess = databaseAccess;
@@ -227,7 +227,6 @@ public class GameView extends SurfaceView implements SensorEventListener{
             if(mAcc > Constants.POWER_ACCELERATION && mScore.getPowerAccumulated() == 100){
                 this.getScore().setPowerOn(true);
                 mLastPowerUse = timeMillis;
-                Toast.makeText(this.getContext(), "Strings On Fire!", Toast.LENGTH_SHORT).show();
             }else{
                 this.getScore().setPowerOn(false);
             }
