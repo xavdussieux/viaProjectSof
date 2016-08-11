@@ -24,7 +24,6 @@ public class Note {
     private float mNoteRadius;
     private GameLoopThread mGameLoopThread;
     private float mTouchedLimit;
-    private float mEndY;
     private float mLeakPoint;
 
     public class TypeNote {
@@ -52,8 +51,8 @@ public class Note {
 
         mNoteRadius = mScreenx / 8;
 
-        mEndY = screenY - 3 * mNoteRadius;
-        float interval = mEndY - Constants.NOTE_START_Y;
+        float endY = screenY - 3 * mNoteRadius;
+        float interval = endY - Constants.NOTE_START_Y;
         mLeakPoint = -1 * screenY / 2;
 
         mTouchedLimit = screenY - 4 * mNoteRadius;
@@ -89,7 +88,6 @@ public class Note {
     }
 
     public void update(Canvas canvas) {
-        TypeNote del = null;
         for (TypeNote note : mNotes) {
             Paint paintBlue = new Paint();
             Paint paintRed = new Paint();
@@ -116,9 +114,12 @@ public class Note {
             paintBlue.setAntiAlias(true);
 
             paintWhite.setColor(Color.WHITE);
+
+            // perspective effect
             float perspectiveRatio = (note.pos.y - mLeakPoint) / (mScreeny - mLeakPoint);
             float dx = note.pos.x - mScreenx / 2;
             float newX = mScreenx / 2 + dx * perspectiveRatio;
+
             //switch needs constants
             if (note.pos.x == mGreenX)
                 canvas.drawCircle((int) newX, note.pos.y, mNoteRadius * perspectiveRatio, paintGreen);
@@ -128,16 +129,13 @@ public class Note {
                 canvas.drawCircle((int) newX, note.pos.y, mNoteRadius * perspectiveRatio, paintYellow);
             if (note.pos.x == mBlueX)
                 canvas.drawCircle((int) newX, note.pos.y, mNoteRadius * perspectiveRatio, paintBlue);
-            canvas.drawLine(0, mTouchedLimit, mScreenx, mTouchedLimit, paintYellow);
+
+            canvas.drawLine(mScreenx * 68 / 640, mTouchedLimit, mScreenx * 571 / 640, mTouchedLimit, paintWhite);
             int dt = mGameLoopThread.getTime() - note.spawnTime;
             note.pos.y = (int) (dt * mSpeed + Constants.NOTE_START_Y);
             if (note.pos.y > mScreeny) {
-                del = note;
+                addNoteToRemove(note);
             }
-        }
-        if (del != null) {
-            addNoteToRemove(del);
-            mScore.missed();
         }
         removeNotes();
     }

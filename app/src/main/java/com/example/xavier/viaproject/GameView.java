@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -15,11 +16,9 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 /**
  * Created by Xavier on 02/08/2016.
@@ -32,7 +31,9 @@ public class GameView extends SurfaceView implements SensorEventListener{
     private float mAccLast;
     private long mLastPowerUse;
     private Bitmap mBackground;
-    private Bitmap mBackgroundEnd;
+    private Path mPolyPath;
+    private Paint mBlackPoly;
+    private Paint mPaintLine;
 
     private GameLoopThread mGameLoopThread;
     private Note mNote;
@@ -105,8 +106,22 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mDatabaseAccess = databaseAccess;
         mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
         mBackground = Bitmap.createScaledBitmap(mBackground, screenx, screeny, false);
-        mBackgroundEnd = BitmapFactory.decodeResource(context.getResources(), R.drawable.end_game_background);
-        mBackgroundEnd = Bitmap.createScaledBitmap(mBackgroundEnd, screenx, screeny, false);
+
+        mBlackPoly= new Paint();
+        mBlackPoly.setColor(Color.BLACK);
+        mBlackPoly.setStyle(Paint.Style.FILL);
+        mBlackPoly.setAntiAlias(true);
+        mPolyPath = new Path();
+        mPolyPath.moveTo(mScreenSize.x / 3, 0);
+        mPolyPath.lineTo(mScreenSize.x * 2 / 3, 0);
+        mPolyPath.lineTo(mScreenSize.x, mScreenSize.y);
+        mPolyPath.lineTo(0, mScreenSize.y);
+        mPolyPath.lineTo(mScreenSize.x / 3, 0);
+
+        mPaintLine = new Paint();
+        mPaintLine.setColor(Color.WHITE);
+        mPaintLine.setAntiAlias(true);
+        mPaintLine.setStrokeWidth(mScreenSize.x / 100);
 
     }
 
@@ -149,13 +164,17 @@ public class GameView extends SurfaceView implements SensorEventListener{
 
     public void updateScreen (Canvas canvas) {
         canvas.drawBitmap(mBackground,0,0,new Paint());
+        canvas.drawPath(mPolyPath, mBlackPoly);
+        canvas.drawLine(mScreenSize.x  * 267 / 640, 0, mScreenSize.x / 4, mScreenSize.y, mPaintLine);
+        canvas.drawLine(mScreenSize.x  / 2, 0, mScreenSize.x  / 2, mScreenSize.y, mPaintLine);
+        canvas.drawLine(mScreenSize.x  * 373 / 640, 0, mScreenSize.x * 3 / 4, mScreenSize.y, mPaintLine);
         mNote.update(canvas);
         mScoreBar.update(canvas);
     }
 
     public void endGameScreen(final Canvas canvas) {
 
-        canvas.drawBitmap(mBackgroundEnd,0,0,new Paint());
+        canvas.drawBitmap(mBackground,0,0,new Paint());
         int textSize = mScreenSize.y / 16;
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
