@@ -5,7 +5,7 @@
         android:key="pref_key_profile">
         <com.example.xavier.viaproject.EditTextPreference
             android:key="pref_key_name"
-            android:title="Set username" />
+            android:title="Username" />
         <com.example.xavier.viaproject.ListPreference
             android:key="pref_key_update"
             android:dialogTitle="Choose the update frequency"
@@ -24,13 +24,13 @@
             android:dialogTitle="Difficulty level"
             android:entries="@array/difficulty_list"
             android:entryValues="@array/difficulty_values"
-            android:title="Set your difficulty level" />
+            android:title="Difficulty level" />
 
         <com.example.xavier.viaproject.ListPreference
             android:key="pref_key_music"
             android:dialogTitle="Select the music"
             android:entries="@array/music_list"
             android:entryValues="@array/music_values"
-            android:title="Set the music" />
+            android:title="Soundtrack" />
     </PreferenceCategory>
 </PreferenceScreen>

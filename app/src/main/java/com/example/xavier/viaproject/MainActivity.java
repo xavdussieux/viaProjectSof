@@ -2,6 +2,7 @@ package com.example.xavier.viaproject;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView textView = (TextView) findViewById(R.id.titleText);
+        textView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sixty.ttf"));
 
         Intent intent = new Intent(this, NotificationService.class);
         this.startService(intent);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 /**
  * Created by Xavier on 04/08/2016.
@@ -20,31 +21,49 @@ public class ScoreBar {
         mScreeny = screeny;
     }
 
-    public void update (Canvas canvas) {
+    public void update (Canvas canvas, int songPer) {
         int rectHeight = mScreeny / 18;
         int textHeight = mScreeny / 16;
+
+        //drawing black rectangle to show score
         Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        canvas.drawRect(0,0, mScreenx, rectHeight, paint);
         paint.setColor(Color.BLACK);
+        canvas.drawRect(0,0, mScreenx, rectHeight, paint);
+
+        //drawing score in white
+        paint.setColor(Color.WHITE);
+        paint.setAntiAlias(true);
         paint.setTextSize(textHeight);
-        String scoreText = "Score: " + mScore.getScore();
+        String scoreText = Integer.toString(mScore.getScore());
         canvas.drawText(scoreText, (mScreenx - paint.measureText(scoreText)) / 2, textHeight - rectHeight / 5, paint);
 
+        //drawing music time line
+        paint.setColor(Color.RED);
+        paint.setAntiAlias(false);
+        canvas.drawRect(0,rectHeight, mScreenx * songPer / 100, rectHeight * 10 / 9, paint);
+
+        //drawing power circle
         Paint circlePaint = new Paint();
         Paint textPaint = new Paint();
-        textPaint.setColor(Color.BLACK);
+        textPaint.setColor(Color.WHITE);
         int color = Color.argb(255, 240, 150 - mScore.getPowerAccumulated(), 10);
         circlePaint.setColor(color);
         circlePaint.setAntiAlias(true);
-        int circleRadius = rectHeight / 2;
-        textPaint.setTextSize(circleRadius);
+        int circleRadius = rectHeight;
+        textPaint.setTextSize(circleRadius * 4 / 5);
         textPaint.setAntiAlias(true);
-        canvas.drawCircle(1 + circleRadius, 1 + circleRadius, circleRadius, circlePaint);
+        RectF arcBounds = new RectF(circleRadius / 4, circleRadius * 5 / 4,
+                                    circleRadius * 9 / 4, circleRadius * 13 / 4);
+        canvas.drawArc(arcBounds,
+                       -90, mScore.getPowerAccumulated() * 360 / 100,
+                       true, circlePaint);
+        circlePaint.setColor(Color.BLACK);
+        canvas.drawCircle(circleRadius * 5 / 4,circleRadius * 9 / 4, circleRadius * 4 / 5, circlePaint);
         canvas.drawText(Integer.toString(mScore.getPowerAccumulated()),
-                1 + circleRadius - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
-                1 + textHeight * 6 / 10, textPaint);
+                circleRadius * 5 / 4 - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
+                circleRadius * 10 / 4, textPaint);
 
+        //drawing multiplier circle
         String multiplier;
         switch (mScore.getMultiplier()){
             case 2:
@@ -82,8 +101,10 @@ public class ScoreBar {
         }
 
         circlePaint.setColor(color);
-        canvas.drawCircle(mScreenx - circleRadius - 1, 1 + circleRadius, circleRadius, circlePaint);
-        canvas.drawText(multiplier, mScreenx - circleRadius - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
-                textHeight * 6 / 10 , textPaint);
+        canvas.drawCircle(mScreenx - circleRadius * 5 / 4, circleRadius * 9 / 4, circleRadius, circlePaint);
+        circlePaint.setColor(Color.BLACK);
+        canvas.drawCircle(mScreenx - circleRadius * 5 / 4, circleRadius * 9 / 4, circleRadius * 4 / 5, circlePaint);
+        canvas.drawText(multiplier, mScreenx - circleRadius * 5 / 4 - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
+                circleRadius * 10 / 4 , textPaint);
     }
 }

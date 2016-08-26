@@ -16,9 +16,9 @@
         android:textAlignment="center"
         android:clickable="false"
         android:textStyle="bold"
-        android:textSize="40sp"
-        android:typeface="serif"
+        android:textSize="50sp"
         android:id="@+id/titleText"/>
+    <!--40sp for default font -->
 
     <TextView
         android:layout_width="wrap_content"

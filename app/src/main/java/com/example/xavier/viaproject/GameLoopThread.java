@@ -47,11 +47,17 @@ public class GameLoopThread extends Thread {
         mOffsetStartMusic = scrolling_time;
     }
 
+    public int getMusicDuration(){
+        return mDuration;
+    }
+
     public int getTime () {
         return (int) (mCurrTime - mInitTime);
     }
 
-
+    public int getSongPer(){
+        return mMediaPlayer.getCurrentPosition() * 100 / mMediaPlayer.getDuration();
+    }
 
     @Override
     public void run() {

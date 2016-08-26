@@ -169,7 +169,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
         canvas.drawLine(mScreenSize.x  / 2, 0, mScreenSize.x  / 2, mScreenSize.y, mPaintLine);
         canvas.drawLine(mScreenSize.x  * 373 / 640, 0, mScreenSize.x * 3 / 4, mScreenSize.y, mPaintLine);
         mNote.update(canvas);
-        mScoreBar.update(canvas);
+        mScoreBar.update(canvas, mGameLoopThread.getSongPer());
     }
 
     public void endGameScreen(final Canvas canvas) {
