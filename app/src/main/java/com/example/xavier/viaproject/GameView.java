@@ -14,6 +14,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -24,12 +25,14 @@ import android.view.SurfaceView;
  * Created by Xavier on 02/08/2016.
  */
 
-public class GameView extends SurfaceView implements SensorEventListener{
+public class GameView extends SurfaceView implements SensorEventListener {
 
     private float mAcc;
     private float mAccCurr;
     private float mAccLast;
     private long mLastPowerUse;
+    private MediaPlayer mBoosPlayer;
+    private MediaPlayer mCheersPlayer;
     private Bitmap mBackground;
     private Path mPolyPath;
     private Paint mBlackPoly;
@@ -66,9 +69,11 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mAccCurr = SensorManager.GRAVITY_EARTH;
         mAccLast = mAccCurr;
         mLastPowerUse = 0;//enabling power anytime
+        mCheersPlayer = MediaPlayer.create(context, Uri.parse(Constants.URI_PATH + "cheers"));
+        mBoosPlayer = MediaPlayer.create(context, Uri.parse(Constants.URI_PATH + "boos"));
 
-
-        mGameLoopThread = new GameLoopThread(this, musicName);
+        mScore = new Score();
+        mGameLoopThread = new GameLoopThread(this, musicName, mScore);
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(new SurfaceHolder.Callback() {
 
@@ -84,6 +89,8 @@ public class GameView extends SurfaceView implements SensorEventListener{
                         e.printStackTrace();
                     }
                 }
+                mBoosPlayer.stop();
+                mCheersPlayer.stop();
             }
 
             @Override
@@ -99,7 +106,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
                 // Nothing to be done
             }
         });
-        mScore = new Score();
+
         mNote = new Note(screenx, screeny, mGameLoopThread, mScore, noteScrollingTime(context));
         mScoreBar = new ScoreBar(screenx, screeny, mScore);
         mScreenSize = new Point(screenx, screeny);
@@ -125,8 +132,8 @@ public class GameView extends SurfaceView implements SensorEventListener{
 
     }
 
-    private int noteScrollingTime (Context context) {
-        int scrolling_time = 0;
+    private int noteScrollingTime(Context context) {
+        int scrolling_time;
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         switch (sharedPreferences.getString(Constants.PREF_DIFFICULTY_KEY, Constants.DEFAULT_DIFFICULTY)) {
@@ -143,7 +150,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
                 scrolling_time = Constants.NOTE_SCROLLING_TIME_EASY;
                 break;
         }
-        return  scrolling_time;
+        return scrolling_time;
     }
 
     public void addNote(int color) {
@@ -152,34 +159,55 @@ public class GameView extends SurfaceView implements SensorEventListener{
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(canvas != null) {
-            if(mGameLoopThread.IsRunning()) {
+        if (canvas != null) {
+            if (mGameLoopThread.IsRunning()) {
                 updateScreen(canvas);
-            }
-            else {
-                endGameScreen(canvas);
+            } else {
+                if(mScore.getPowerAccumulated() == 0){
+                    looseEndGameScreen(canvas);
+                }else {
+                    winEndGameScreen(canvas);
+                }
             }
         }
     }
 
-    public void updateScreen (Canvas canvas) {
-        canvas.drawBitmap(mBackground,0,0,new Paint());
+    public void updateScreen(Canvas canvas) {
+        canvas.drawBitmap(mBackground, 0, 0, new Paint());
         canvas.drawPath(mPolyPath, mBlackPoly);
-        canvas.drawLine(mScreenSize.x  * 267 / 640, 0, mScreenSize.x / 4, mScreenSize.y, mPaintLine);
-        canvas.drawLine(mScreenSize.x  / 2, 0, mScreenSize.x  / 2, mScreenSize.y, mPaintLine);
-        canvas.drawLine(mScreenSize.x  * 373 / 640, 0, mScreenSize.x * 3 / 4, mScreenSize.y, mPaintLine);
+        canvas.drawLine(mScreenSize.x * 267 / 640, 0, mScreenSize.x / 4, mScreenSize.y, mPaintLine);
+        canvas.drawLine(mScreenSize.x / 2, 0, mScreenSize.x / 2, mScreenSize.y, mPaintLine);
+        canvas.drawLine(mScreenSize.x * 373 / 640, 0, mScreenSize.x * 3 / 4, mScreenSize.y, mPaintLine);
         mNote.update(canvas);
         mScoreBar.update(canvas, mGameLoopThread.getSongPer());
     }
 
-    public void endGameScreen(final Canvas canvas) {
-
-        canvas.drawBitmap(mBackground,0,0,new Paint());
+    public void looseEndGameScreen(final Canvas canvas) {
+        mBoosPlayer.start();
+        canvas.drawBitmap(mBackground, 0, 0, new Paint());
         int textSize = mScreenSize.y / 16;
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setTextSize(textSize);
-        String headText = "Stats";
+        String headText = "You SUCK!";
+        canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2, textSize * 3 / 2, paint);
+        String scoreText = "Your score: " + mScore.getScore();
+        canvas.drawText(scoreText, 0, textSize * 9 / 2, paint);
+        String perText = "% hit: " + mScore.getTouchedPer();
+        canvas.drawText(perText, 0, textSize * 6, paint);
+        String streakText = "Note streak: " + mScore.getBestStreak();
+        canvas.drawText(streakText, 0, textSize * 15 / 2, paint);
+        mUpdating = false;
+    }
+
+    public void winEndGameScreen(final Canvas canvas) {
+        mCheersPlayer.start();
+        canvas.drawBitmap(mBackground, 0, 0, new Paint());
+        int textSize = mScreenSize.y / 16;
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(textSize);
+        String headText = "You ROCK!";
         canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2, textSize * 3 / 2, paint);
         String scoreText = "Your score: " + mScore.getScore();
         canvas.drawText(scoreText, 0, textSize * 9 / 2, paint);
@@ -190,7 +218,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
         mDatabaseAccess.storeRecord(mScore.getScore());
         mDatabaseAccess.rank(mScore.getScore());
         String rank = mDatabaseAccess.getRank();
-        if(!rank.equals(Constants.DEFAULT_RANK))
+        if (!rank.equals(Constants.DEFAULT_RANK))
             mUpdating = false;
         String rankText = "Your rank: " + rank;
         canvas.drawText(rankText, 0, textSize * 9, paint);
@@ -223,8 +251,7 @@ public class GameView extends SurfaceView implements SensorEventListener{
     }
 
 
-
-    public Score getScore(){
+    public Score getScore() {
         return mScore;
     }
 
@@ -243,11 +270,12 @@ public class GameView extends SurfaceView implements SensorEventListener{
         long diff = timeMillis - mLastPowerUse;
         if(diff <= Constants.POWER_DURATION){
             //case where power has to be locked: decrease power accumulated
-            mScore.setPowerAccumulated((int) (100 - (diff * 100 / Constants.POWER_DURATION)));
+            mScore.setPowerAccumulated((int) (100 - ((diff * 100 / Constants.POWER_DURATION) / 2)));//back to 50% of power
         }else{
             //if activated (by shaking)
             if(mAcc > Constants.POWER_ACCELERATION && mScore.getPowerAccumulated() == 100){
                 this.getScore().setPowerOn(true);
+                mCheersPlayer.start();
                 mLastPowerUse = timeMillis;
             }else{
                 this.getScore().setPowerOn(false);

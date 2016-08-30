@@ -134,6 +134,7 @@ public class Note {
             int dt = mGameLoopThread.getTime() - note.spawnTime;
             note.pos.y = (int) (dt * mSpeed + Constants.NOTE_START_Y);
             if (note.pos.y > mScreeny) {
+                mScore.missed();
                 addNoteToRemove(note);
             }
         }

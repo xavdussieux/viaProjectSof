@@ -8,7 +8,7 @@ public class Score {
     private int mScore;
     private int mMultiplier;
     private int mPowerMultiplier;
-    private int mPowerAccumulated; //in percentage
+    private float mPowerAccumulated; //in percentage
     private int mHitStreak;
     private int mBestStreak;
     private int mNoteNum;
@@ -20,7 +20,7 @@ public class Score {
         mHitStreak = 0;
         mMultiplier = 1;
         mPowerMultiplier = 1;
-        mPowerAccumulated = 0;
+        mPowerAccumulated = 50;
         mIsPowerOn = false;
         mBestStreak = 0;
         mNoteNum = 0;
@@ -45,7 +45,8 @@ public class Score {
             }
         }
         mScore += Constants.TOUCH_POINTS * mMultiplier * mPowerMultiplier;
-        mPowerAccumulated = Math.min(mPowerAccumulated + mMultiplier * Constants.TOUCH_POINTS / 10, 100);
+        float powerUp = (float) (mMultiplier * Constants.TOUCH_POINTS) / 40;
+        mPowerAccumulated = Math.min(mPowerAccumulated + powerUp, 100);
     }
 
     public int getBestStreak(){
@@ -69,6 +70,9 @@ public class Score {
         mMultiplier = 0;
         mNoteNum++;
         mScore -= Constants.MISS_POINTS;
+        float powerDown = (float) (Constants.TOUCH_POINTS) / 10;
+        mPowerAccumulated = Math.max(mPowerAccumulated - powerDown, 0);
+
     }
 
     public void setPowerOn(boolean isPowerOn){
@@ -86,7 +90,7 @@ public class Score {
     }
 
     public int getPowerAccumulated(){
-        return mPowerAccumulated;
+        return (int)mPowerAccumulated;
     }
 
     public void setPowerAccumulated(int power){

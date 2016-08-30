@@ -20,6 +20,7 @@ public class GameLoopThread extends Thread {
     private GameView mGameView;
     private boolean mIsRunning = false;
     private MediaPlayer mMediaPlayer;
+    private Score mScore;
     private long mInitTime;
     private long mCurrTime;
     private MusicTrack mMusicTrack;
@@ -27,8 +28,9 @@ public class GameLoopThread extends Thread {
     private int mOffsetStartMusic;
     private String mMusicName;
 
-    public GameLoopThread(GameView view, String musicName) {
+    public GameLoopThread(GameView view, String musicName, Score score) {
         this.mGameView = view;
+        mScore = score;
         mMusicName = musicName;
     }
 
@@ -47,10 +49,6 @@ public class GameLoopThread extends Thread {
         mOffsetStartMusic = scrolling_time;
     }
 
-    public int getMusicDuration(){
-        return mDuration;
-    }
-
     public int getTime () {
         return (int) (mCurrTime - mInitTime);
     }
@@ -67,7 +65,7 @@ public class GameLoopThread extends Thread {
 
         mInitTime = System.currentTimeMillis();
 
-        while (mIsRunning) {
+        while (mIsRunning && mScore.getPowerAccumulated() > 0) {
             c = null;
             mCurrTime = System.currentTimeMillis();
             if (!mMediaPlayer.isPlaying()) {
@@ -99,9 +97,14 @@ public class GameLoopThread extends Thread {
                     sleep(10);
             } catch (Exception e) {}
         }
+
+        if(mScore != null && mScore.getPowerAccumulated() == 0){
+            onStop();
+        }
     }
 
     public void onStop() {
+        mMediaPlayer.stop();
         mIsRunning = false;
         Canvas c = null;
         while (mGameView.updating()) {
