@@ -47,7 +47,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private DatabaseAccess mDatabaseAccess;
     private boolean mUpdating = true;
 
-    public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
+    public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer,
+                    DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
         super(context);
         init(context, screenx, screeny, mediaPlayer, databaseAccess, sensorManager, musicName);
     }
@@ -60,7 +61,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
         super(context, attrs, defStyle);
     }
 
-    private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer, DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
+    private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer,
+                      DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
 
         //initializing accelerometer sensor manager
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -137,7 +139,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
         int scrolling_time;
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        switch (sharedPreferences.getString(Constants.PREF_DIFFICULTY_KEY, Constants.DEFAULT_DIFFICULTY)) {
+        switch (sharedPreferences.getString(Constants.PREF_DIFFICULTY_KEY,
+                Constants.DEFAULT_DIFFICULTY)) {
             case "easy":
                 scrolling_time = Constants.NOTE_SCROLLING_TIME_EASY;
                 break;
@@ -178,7 +181,24 @@ public class GameView extends SurfaceView implements SensorEventListener {
         canvas.drawPath(mPolyPath, mBlackPoly);
         canvas.drawLine(mScreenSize.x * 267 / 640, 0, mScreenSize.x / 4, mScreenSize.y, mPaintLine);
         canvas.drawLine(mScreenSize.x / 2, 0, mScreenSize.x / 2, mScreenSize.y, mPaintLine);
-        canvas.drawLine(mScreenSize.x * 373 / 640, 0, mScreenSize.x * 3 / 4, mScreenSize.y, mPaintLine);
+        canvas.drawLine(mScreenSize.x * 373 / 640, 0, mScreenSize.x * 3 / 4, mScreenSize.y,
+                mPaintLine);
+
+        int noteRadius = mNote.getNoteRadius();
+        int touchLimit = mNote.getTouchLimit();
+        CustomCircle greenButton = new CustomCircle(mScreenSize.x / 30 + noteRadius,
+                touchLimit + noteRadius, noteRadius * 9 / 10, Color.argb(255, 0, 129, 0), 360, null, canvas);
+        CustomCircle redButton = new CustomCircle(mScreenSize.x / 30 +  3 * noteRadius * 16 / 17,
+                touchLimit + noteRadius, noteRadius * 9 / 10, Color.argb(255, 255, 0, 0), 360, null, canvas);
+        CustomCircle yellowButton = new CustomCircle(mScreenSize.x * 29 / 30 - 3 * noteRadius * 16 / 17,
+                touchLimit + noteRadius, noteRadius * 9 / 10, Color.argb(255, 255, 255, 0), 360, null, canvas);
+        CustomCircle blueButton = new CustomCircle(mScreenSize.x * 29 / 30 -  noteRadius,
+                touchLimit + noteRadius, noteRadius * 9 / 10, Color.argb(255, 0, 0, 255), 360, null, canvas);
+        greenButton.draw();
+        redButton.draw();
+        yellowButton.draw();
+        blueButton.draw();
+
         mNote.update(canvas);
         mScoreBar.update(canvas, mGameLoopThread.getSongPer());
     }
@@ -191,7 +211,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
         paint.setColor(Color.WHITE);
         paint.setTextSize(textSize);
         String headText = "You SUCK!";
-        canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2, textSize * 3 / 2, paint);
+        canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2,
+                textSize * 3 / 2, paint);
         String scoreText = "Your score: " + mScore.getScore();
         canvas.drawText(scoreText, 0, textSize * 9 / 2, paint);
         String perText = "% hit: " + mScore.getTouchedPer();

@@ -21,9 +21,9 @@ public class Note {
     private int mYellowX;
     private Score mScore;
     private float mSpeed;
-    private float mNoteRadius;
+    private int mNoteRadius;
     private GameLoopThread mGameLoopThread;
-    private float mTouchedLimit;
+    private int mTouchLimit;
     private float mLeakPoint;
 
     public class TypeNote {
@@ -55,13 +55,21 @@ public class Note {
         float interval = endY - Constants.NOTE_START_Y;
         mLeakPoint = -1 * screenY / 2;
 
-        mTouchedLimit = screenY - 4 * mNoteRadius;
+        mTouchLimit = screenY - mNoteRadius * 13 / 5;
         mSpeed = interval / scrolling_time;
 
         mNotes = new ArrayList<TypeNote>();
         mNotesToRemove = new ArrayList<TypeNote>();
         mGameLoopThread = gameLoopThread;
         mScore = score;
+    }
+
+    public int getNoteRadius(){
+        return mNoteRadius;
+    }
+
+    public int getTouchLimit(){
+        return mTouchLimit;
     }
 
     public void spawn(String noteType) {
@@ -130,7 +138,8 @@ public class Note {
             if (note.pos.x == mBlueX)
                 canvas.drawCircle((int) newX, note.pos.y, mNoteRadius * perspectiveRatio, paintBlue);
 
-            canvas.drawLine(mScreenx * 68 / 640, mTouchedLimit, mScreenx * 571 / 640, mTouchedLimit, paintWhite);
+            //white fret delimiting touching area
+            canvas.drawLine(mScreenx / 12, mTouchLimit, mScreenx * 11 / 12, mTouchLimit, paintWhite);
             int dt = mGameLoopThread.getTime() - note.spawnTime;
             note.pos.y = (int) (dt * mSpeed + Constants.NOTE_START_Y);
             if (note.pos.y > mScreeny) {
@@ -157,7 +166,7 @@ public class Note {
         for (TypeNote note : mNotes) {
             dx = touchedPoint.x - note.pos.x;
             dy = touchedPoint.y - note.pos.y;
-            if (touchedPoint.y > mTouchedLimit) {
+            if (touchedPoint.y > mTouchLimit) {
                 if (Math.sqrt(dx * dx + dy * dy) < mNoteRadius * 11 /10) {
                     addNoteToRemove(note);
                     return true;
