@@ -69,6 +69,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         mAccCurr = SensorManager.GRAVITY_EARTH;
         mAccLast = mAccCurr;
         mLastPowerUse = 0;//enabling power anytime
+
         mCheersPlayer = MediaPlayer.create(context, Uri.parse(Constants.URI_PATH + "cheers"));
         mBoosPlayer = MediaPlayer.create(context, Uri.parse(Constants.URI_PATH + "boos"));
 
@@ -224,7 +225,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         canvas.drawText(rankText, 0, textSize * 9, paint);
     }
 
-    public boolean updating() {
+    public boolean getUpdate() {
         return mUpdating;
     }
 
@@ -236,12 +237,14 @@ public class GameView extends SurfaceView implements SensorEventListener {
         Point point;
         switch (actionMask) {
             case MotionEvent.ACTION_DOWN:
+                //single touch case
                 point = new Point((int) event.getX(), (int) event.getY());
                 if (mNote.onNoteWithDel(point)) mScore.touched();
                 else mScore.missed();
                 break;
 
             case MotionEvent.ACTION_POINTER_DOWN:
+                //multi touch case
                 point = new Point((int) event.getX(pointerIndex), (int) event.getY(pointerIndex));
                 if (mNote.onNoteWithDel(point)) mScore.touched();
                 else mScore.missed();
@@ -272,7 +275,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
             //case where power has to be locked: decrease power accumulated
             mScore.setPowerAccumulated((int) (100 - ((diff * 100 / Constants.POWER_DURATION) / 2)));//back to 50% of power
         }else{
-            //if activated (by shaking)
+            //if activated (by shaking) while star power is at 100%
             if(mAcc > Constants.POWER_ACCELERATION && mScore.getPowerAccumulated() == 100){
                 this.getScore().setPowerOn(true);
                 mCheersPlayer.start();

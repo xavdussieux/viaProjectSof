@@ -2,15 +2,7 @@ package com.example.xavier.viaproject;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by Xavier on 03/08/2016
@@ -74,16 +66,7 @@ public class GameLoopThread extends Thread {
             }
 
             mMusicTrack.update(mCurrTime - mInitTime);
-            try {
-                c = mGameView.getHolder().lockCanvas();
-                synchronized (mGameView.getHolder()) {
-                    mGameView.onDraw(c);
-                }
-            } finally {
-                if (c != null) {
-                    mGameView.getHolder().unlockCanvasAndPost(c);
-                }
-            }
+            syncAndDraw(mGameView, c);
 
             if(getTime() > mDuration) {
                 onStop();
@@ -103,21 +86,25 @@ public class GameLoopThread extends Thread {
         }
     }
 
+    public void syncAndDraw(GameView gameView, Canvas canvas){
+        try {
+            canvas = gameView.getHolder().lockCanvas();
+            synchronized (gameView.getHolder()) {
+                gameView.onDraw(canvas);
+            }
+        } finally {
+            if (canvas != null) {
+                gameView.getHolder().unlockCanvasAndPost(canvas);
+            }
+        }
+    }
+
     public void onStop() {
         mMediaPlayer.stop();
         mIsRunning = false;
         Canvas c = null;
-        while (mGameView.updating()) {
-            try {
-                c = mGameView.getHolder().lockCanvas();
-                synchronized (mGameView.getHolder()) {
-                    mGameView.onDraw(c);
-                }
-            } finally {
-                if (c != null) {
-                    mGameView.getHolder().unlockCanvasAndPost(c);
-                }
-            }
+        while (mGameView.getUpdate()) {
+            syncAndDraw(mGameView, c);
             try {
                 sleep(1000);
             } catch (Exception e) {}

@@ -1,10 +1,8 @@
 package com.example.xavier.viaproject;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
 /**
  * Created by Xavier on 04/08/2016.
@@ -12,56 +10,43 @@ import android.graphics.RectF;
 public class ScoreBar {
 
     private Score mScore;
-    private int mScreenx;
-    private int mScreeny;
+    private int mScreenX;
+    private int mScreenY;
 
-    public ScoreBar(int screenx, int screeny, Score score) {
+    public ScoreBar(int screenX, int screenY, Score score) {
         mScore = score;
-        mScreenx = screenx;
-        mScreeny = screeny;
+        mScreenX = screenX;
+        mScreenY = screenY;
     }
 
     public void update (Canvas canvas, int songPer) {
-        int rectHeight = mScreeny / 18;
-        int textHeight = mScreeny / 16;
+        int rectHeight = mScreenY / 18;
+        int textHeight = mScreenY / 16;
 
         //drawing black rectangle to show score
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
-        canvas.drawRect(0,0, mScreenx, rectHeight, paint);
+        canvas.drawRect(0,0, mScreenX, rectHeight, paint);
 
         //drawing score in white
         paint.setColor(Color.WHITE);
         paint.setAntiAlias(true);
         paint.setTextSize(textHeight);
         String scoreText = Integer.toString(mScore.getScore());
-        canvas.drawText(scoreText, (mScreenx - paint.measureText(scoreText)) / 2, textHeight - rectHeight / 5, paint);
+        canvas.drawText(scoreText, (mScreenX - paint.measureText(scoreText)) / 2,
+                textHeight - rectHeight / 5, paint);
 
         //drawing music time line
         paint.setColor(Color.RED);
         paint.setAntiAlias(false);
-        canvas.drawRect(0,rectHeight, mScreenx * songPer / 100, rectHeight * 10 / 9, paint);
+        canvas.drawRect(0,rectHeight, mScreenX * songPer / 100, rectHeight * 10 / 9, paint);
 
         //drawing power circle
-        Paint circlePaint = new Paint();
-        Paint textPaint = new Paint();
-        textPaint.setColor(Color.WHITE);
         int color = Color.argb(255, 240, 150 - mScore.getPowerAccumulated(), 10);
-        circlePaint.setColor(color);
-        circlePaint.setAntiAlias(true);
-        int circleRadius = rectHeight;
-        textPaint.setTextSize(circleRadius * 4 / 5);
-        textPaint.setAntiAlias(true);
-        RectF arcBounds = new RectF(circleRadius / 4, circleRadius * 5 / 4,
-                                    circleRadius * 9 / 4, circleRadius * 13 / 4);
-        canvas.drawArc(arcBounds,
-                       -90, mScore.getPowerAccumulated() * 360 / 100,
-                       true, circlePaint);
-        circlePaint.setColor(Color.BLACK);
-        canvas.drawCircle(circleRadius * 5 / 4,circleRadius * 9 / 4, circleRadius * 4 / 5, circlePaint);
-        canvas.drawText(Integer.toString(mScore.getPowerAccumulated()),
-                circleRadius * 5 / 4 - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
-                circleRadius * 10 / 4, textPaint);
+        CustomCircle powerCircle = new CustomCircle(rectHeight * 5 / 4, rectHeight * 9 / 4,
+                rectHeight, color, mScore.getPowerAccumulated() * 360 / 100,
+                Integer.toString(mScore.getPowerAccumulated()), canvas);
+        powerCircle.draw();
 
         //drawing multiplier circle
         String multiplier;
@@ -99,12 +84,9 @@ public class ScoreBar {
                 }
                 break;
         }
+        CustomCircle multiplierCircle = new CustomCircle(mScreenX - rectHeight * 5 / 4,
+                rectHeight * 9 / 4, rectHeight, color, 360, multiplier, canvas);
+        multiplierCircle.draw();
 
-        circlePaint.setColor(color);
-        canvas.drawCircle(mScreenx - circleRadius * 5 / 4, circleRadius * 9 / 4, circleRadius, circlePaint);
-        circlePaint.setColor(Color.BLACK);
-        canvas.drawCircle(mScreenx - circleRadius * 5 / 4, circleRadius * 9 / 4, circleRadius * 4 / 5, circlePaint);
-        canvas.drawText(multiplier, mScreenx - circleRadius * 5 / 4 - textPaint.measureText(Integer.toString(mScore.getPowerAccumulated())) / 2,
-                circleRadius * 10 / 4 , textPaint);
     }
 }
