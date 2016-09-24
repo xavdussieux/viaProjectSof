@@ -46,11 +46,13 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Point mScreenSize;
     private DatabaseAccess mDatabaseAccess;
     private boolean mUpdating = true;
+    private boolean mIsOnline = false;
 
-    public GameView(Context context, int screenx, int screeny, MediaPlayer mediaPlayer,
-                    DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
+    public GameView(Context context, Point screen, MediaPlayer mediaPlayer,
+                    DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName,
+                    boolean isOnline) {
         super(context);
-        init(context, screenx, screeny, mediaPlayer, databaseAccess, sensorManager, musicName);
+        init(context, screen, mediaPlayer, databaseAccess, sensorManager, musicName, isOnline);
     }
 
     public GameView(Context context, AttributeSet attrs) {
@@ -61,8 +63,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
         super(context, attrs, defStyle);
     }
 
-    private void init(final Context context, int screenx, int screeny, final MediaPlayer mediaPlayer,
-                      DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName) {
+    private void init(final Context context, Point screen, final MediaPlayer mediaPlayer,
+                      DatabaseAccess databaseAccess, SensorManager sensorManager, String musicName,
+                      boolean isOnline) {
 
         //initializing accelerometer sensor manager
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -110,12 +113,12 @@ public class GameView extends SurfaceView implements SensorEventListener {
             }
         });
 
-        mNote = new Note(screenx, screeny, mGameLoopThread, mScore, noteScrollingTime(context));
-        mScoreBar = new ScoreBar(screenx, screeny, mScore);
-        mScreenSize = new Point(screenx, screeny);
+        mScreenSize = screen;
+        mNote = new Note(mScreenSize.x, mScreenSize.y, mGameLoopThread, mScore, noteScrollingTime(context));
+        mScoreBar = new ScoreBar(mScreenSize.x, mScreenSize.y, mScore);
         mDatabaseAccess = databaseAccess;
         mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
-        mBackground = Bitmap.createScaledBitmap(mBackground, screenx, screeny, false);
+        mBackground = Bitmap.createScaledBitmap(mBackground, mScreenSize.x, mScreenSize.y, false);
 
         mBlackPoly= new Paint();
         mBlackPoly.setColor(Color.BLACK);
@@ -133,6 +136,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         mPaintLine.setAntiAlias(true);
         mPaintLine.setStrokeWidth(mScreenSize.x / 100);
 
+        mIsOnline = isOnline;
     }
 
     private int noteScrollingTime(Context context) {
@@ -237,13 +241,14 @@ public class GameView extends SurfaceView implements SensorEventListener {
         canvas.drawText(perText, 0, textSize * 6, paint);
         String streakText = "Note streak: " + mScore.getBestStreak();
         canvas.drawText(streakText, 0, textSize * 15 / 2, paint);
-        mDatabaseAccess.storeRecord(mScore.getScore());
-        mDatabaseAccess.rank(mScore.getScore());
-        String rank = mDatabaseAccess.getRank();
-        if (!rank.equals(Constants.DEFAULT_RANK))
-            mUpdating = false;
-        String rankText = "Your rank: " + rank;
-        canvas.drawText(rankText, 0, textSize * 9, paint);
+        if(mIsOnline) {
+            mDatabaseAccess.storeRecord(mScore.getScore());
+            mDatabaseAccess.rank(mScore.getScore());
+            String rank = mDatabaseAccess.getRank();
+            String rankText = "Your rank: " + rank;
+            canvas.drawText(rankText, 0, textSize * 9, paint);
+        }
+        mUpdating = false;
     }
 
     public boolean getUpdate() {

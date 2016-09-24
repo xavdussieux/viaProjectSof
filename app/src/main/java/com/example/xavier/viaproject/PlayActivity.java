@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
@@ -38,11 +40,20 @@ public class PlayActivity extends Activity{
         DatabaseAccess databaseAccess = new DatabaseAccess(this);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        gameView = new GameView(this, size.x, size.y, mMediaPlayer, databaseAccess, mSensorManager, music_name);
+        gameView = new GameView(this, size, mMediaPlayer, databaseAccess, mSensorManager,
+                music_name, isOnline());
         setContentView(gameView);
 
 
 
+    }
+
+    //internet availability check
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override
