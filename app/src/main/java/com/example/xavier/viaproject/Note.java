@@ -167,7 +167,7 @@ public class Note {
             dx = touchedPoint.x - note.pos.x;
             dy = touchedPoint.y - note.pos.y;
             if (touchedPoint.y > mTouchLimit) {
-                if (Math.sqrt(dx * dx + dy * dy) < mNoteRadius * 11 /10) {
+                if (Math.sqrt(dx * dx + dy * dy) < mNoteRadius * 15 /10) {
                     addNoteToRemove(note);
                     return true;
                 }

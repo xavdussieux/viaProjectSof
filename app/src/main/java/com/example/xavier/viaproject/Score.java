@@ -50,11 +50,7 @@ public class Score {
     }
 
     public int getBestStreak(){
-        if(mBestStreak == 0){
-            //no note missed
-            return mNoteNum;
-        }
-        return mBestStreak;
+        return Math.max(mHitStreak, mBestStreak);
     }
 
     public int getTouchedPer(){

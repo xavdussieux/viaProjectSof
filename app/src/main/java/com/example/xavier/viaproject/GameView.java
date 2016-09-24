@@ -172,49 +172,68 @@ public class GameView extends SurfaceView implements SensorEventListener {
                 updateScreen(canvas);
             } else {
                 if(mScore.getPowerAccumulated() == 0){
-                    looseEndGameScreen(canvas);
+                    endGameScreen(canvas, false);
                 }else {
-                    winEndGameScreen(canvas);
+                    endGameScreen(canvas, true);
                 }
             }
         }
     }
 
-    public void updateScreen(Canvas canvas) {
+    public void drawBackground(Canvas canvas){
         canvas.drawBitmap(mBackground, 0, 0, new Paint());
         canvas.drawPath(mPolyPath, mBlackPoly);
         canvas.drawLine(mScreenSize.x * 267 / 640, 0, mScreenSize.x / 4, mScreenSize.y, mPaintLine);
         canvas.drawLine(mScreenSize.x / 2, 0, mScreenSize.x / 2, mScreenSize.y, mPaintLine);
         canvas.drawLine(mScreenSize.x * 373 / 640, 0, mScreenSize.x * 3 / 4, mScreenSize.y,
                 mPaintLine);
+    }
 
+    public void drawButtons(Canvas canvas){
         int noteRadius = mNote.getNoteRadius();
         int touchLimit = mNote.getTouchLimit();
         CustomCircle greenButton = new CustomCircle(mScreenSize.x / 30 + noteRadius,
-                touchLimit + noteRadius, noteRadius * 9 / 10, Color.argb(255, 0, 129, 0), 360, null, canvas);
+                touchLimit + noteRadius, noteRadius * 9 / 10,
+                Color.argb(255, 0, 129, 0), 360, null, canvas);
         CustomCircle redButton = new CustomCircle(mScreenSize.x / 30 +  3 * noteRadius * 16 / 17,
-                touchLimit + noteRadius, noteRadius * 9 / 10, Color.argb(255, 255, 0, 0), 360, null, canvas);
+                touchLimit + noteRadius, noteRadius * 9 / 10,
+                Color.argb(255, 255, 0, 0), 360, null, canvas);
         CustomCircle yellowButton = new CustomCircle(mScreenSize.x * 29 / 30 - 3 * noteRadius * 16 / 17,
-                touchLimit + noteRadius, noteRadius * 9 / 10, Color.argb(255, 255, 255, 0), 360, null, canvas);
+                touchLimit + noteRadius, noteRadius * 9 / 10,
+                Color.argb(255, 255, 255, 0), 360, null, canvas);
         CustomCircle blueButton = new CustomCircle(mScreenSize.x * 29 / 30 -  noteRadius,
-                touchLimit + noteRadius, noteRadius * 9 / 10, Color.argb(255, 0, 0, 255), 360, null, canvas);
+                touchLimit + noteRadius, noteRadius * 9 / 10,
+                Color.argb(255, 0, 0, 255), 360, null, canvas);
         greenButton.draw();
         redButton.draw();
         yellowButton.draw();
         blueButton.draw();
+    }
 
+    public void updateScreen(Canvas canvas) {
+        drawBackground(canvas);
+        drawButtons(canvas);
         mNote.update(canvas);
         mScoreBar.update(canvas, mGameLoopThread.getSongPer());
     }
 
-    public void looseEndGameScreen(final Canvas canvas) {
-        mBoosPlayer.start();
+
+    public void endGameScreen(final Canvas canvas, boolean hasWon) {
+
         canvas.drawBitmap(mBackground, 0, 0, new Paint());
         int textSize = mScreenSize.y / 16;
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setTextSize(textSize);
-        String headText = "You SUCK!";
+        String headText;
+        if(hasWon){
+            mCheersPlayer.start();
+            headText = "You ROCK!";
+        }else{
+            mBoosPlayer.start();
+            headText = "You SUCK!";
+        }
+
         canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2,
                 textSize * 3 / 2, paint);
         String scoreText = "Your score: " + mScore.getScore();
@@ -223,35 +242,20 @@ public class GameView extends SurfaceView implements SensorEventListener {
         canvas.drawText(perText, 0, textSize * 6, paint);
         String streakText = "Note streak: " + mScore.getBestStreak();
         canvas.drawText(streakText, 0, textSize * 15 / 2, paint);
-        mUpdating = false;
-    }
 
-    public void winEndGameScreen(final Canvas canvas) {
-        mCheersPlayer.start();
-        canvas.drawBitmap(mBackground, 0, 0, new Paint());
-        int textSize = mScreenSize.y / 16;
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setTextSize(textSize);
-        String headText = "You ROCK!";
-        canvas.drawText(headText, (mScreenSize.x - paint.measureText(headText)) / 2, textSize * 3 / 2, paint);
-        String scoreText = "Your score: " + mScore.getScore();
-        canvas.drawText(scoreText, 0, textSize * 9 / 2, paint);
-        String perText = "% hit: " + mScore.getTouchedPer();
-        canvas.drawText(perText, 0, textSize * 6, paint);
-        String streakText = "Note streak: " + mScore.getBestStreak();
-        canvas.drawText(streakText, 0, textSize * 15 / 2, paint);
-        if(mIsOnline) {
+        if(hasWon && mIsOnline) {
             mDatabaseAccess.storeRecord(mScore.getScore());
             mDatabaseAccess.rank(mScore.getScore());
             String rank = mDatabaseAccess.getRank();
-            String rankText = "Your rank: " + rank;
-            canvas.drawText(rankText, 0, textSize * 9, paint);
+            if(!rank.equals(Constants.DEFAULT_RANK)) {
+                mUpdating = false;
+            }
+            canvas.drawText("Your rank: " + rank, 0, textSize * 9, paint);
         }
-        mUpdating = false;
+        mUpdating = false;//stop game view updating
     }
 
-    public boolean getUpdate() {
+    public boolean needUpdate() {
         return mUpdating;
     }
 
@@ -299,7 +303,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
         long diff = timeMillis - mLastPowerUse;
         if(diff <= Constants.POWER_DURATION){
             //case where power has to be locked: decrease power accumulated
-            mScore.setPowerAccumulated((int) (100 - ((diff * 100 / Constants.POWER_DURATION) / 2)));//back to 50% of power
+            mScore.setPowerAccumulated((int) (100 - ((diff * 100 / Constants.POWER_DURATION) / 2)));
+            //back to 50% of power
         }else{
             //if activated (by shaking) while star power is at 100%
             if(mAcc > Constants.POWER_ACCELERATION && mScore.getPowerAccumulated() == 100){

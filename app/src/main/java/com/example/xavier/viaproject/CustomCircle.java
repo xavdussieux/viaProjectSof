@@ -18,15 +18,8 @@ public class CustomCircle {
     private String mText;
     private Canvas mCanvas;
 
-    public CustomCircle(){
-        mX = 0;
-        mY = 0;
-        mCircleRadius = 0;
-        mText = null;
-        mCanvas = null;
-    }
-
-    public CustomCircle(int x, int y, int circleRadius, int color, int sweepAngle, String text, Canvas canvas){
+    public CustomCircle(int x, int y, int circleRadius, int color, int sweepAngle, String text,
+                        Canvas canvas){
         mX = x;
         mY = y;
         mCircleRadius = circleRadius;

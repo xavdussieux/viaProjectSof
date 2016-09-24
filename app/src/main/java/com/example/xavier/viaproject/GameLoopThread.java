@@ -103,7 +103,7 @@ public class GameLoopThread extends Thread {
         mMediaPlayer.stop();
         mIsRunning = false;
         Canvas c = null;
-        while (mGameView.getUpdate()) {
+        while (mGameView.needUpdate()) {
             syncAndDraw(mGameView, c);
             try {
                 sleep(1000);

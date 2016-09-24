@@ -39,5 +39,4 @@ public class Constants {
     public static final int NOTE_SCROLLING_TIME_HARD = 1500;
 
     public static final String URI_PATH = "android.resource://com.example.xavier.viaproject/raw/";
-
 }
